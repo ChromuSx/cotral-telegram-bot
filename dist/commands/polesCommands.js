@@ -21,7 +21,7 @@ async function getPoleByArrivalAndDestinationLocality(ctx, params) {
 exports.getPoleByArrivalAndDestinationLocality = getPoleByArrivalAndDestinationLocality;
 async function getAllPolesDestinationsByArrivalLocality(ctx, arrivalLocality) {
     const apiUrl = `/poles/destinations/${arrivalLocality}`;
-    await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatStringArray);
+    await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatStringArray, true);
 }
 exports.getAllPolesDestinationsByArrivalLocality = getAllPolesDestinationsByArrivalLocality;
 function formatPoleMessage(pole) {

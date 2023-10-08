@@ -22,7 +22,7 @@ export async function getPoleByArrivalAndDestinationLocality(ctx: Context, param
 
 export async function getAllPolesDestinationsByArrivalLocality(ctx: Context, arrivalLocality: string): Promise<void> {
     const apiUrl = `/poles/destinations/${arrivalLocality}`;
-    await handleApiResponse(ctx, apiUrl, formatStringArray);
+    await handleApiResponse(ctx, apiUrl, formatStringArray, true);
 }
 
 function formatPoleMessage(pole: Pole): string {

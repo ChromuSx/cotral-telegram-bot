@@ -113,19 +113,42 @@ async function handleCommand(myCtx, text) {
         handleErrors(myCtx, error);
     }
 }
+const mainMenu = telegraf_1.Markup.inlineKeyboard([
+    telegraf_1.Markup.button.callback('Paline', 'POLES_MENU'),
+    telegraf_1.Markup.button.callback('Fermate', 'STOPS_MENU'),
+    telegraf_1.Markup.button.callback('Transiti', 'TRANSITS_MENU'),
+    telegraf_1.Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
+]);
+const polesMenu = telegraf_1.Markup.inlineKeyboard([
+    telegraf_1.Markup.button.callback('Codice', Command.GetPolesByCode),
+    telegraf_1.Markup.button.callback('Posizione', Command.GetPolesByPosition),
+    telegraf_1.Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
+    telegraf_1.Markup.button.callback('Località di arrivo', Command.GetAllPolesDestinationsByArrival)
+]);
+const stopsMenu = telegraf_1.Markup.inlineKeyboard([
+    telegraf_1.Markup.button.callback('Fermate per località', Command.GetStopsByLocality),
+    telegraf_1.Markup.button.callback('Prima fermata per località', Command.GetFirstStopByLocality)
+]);
+const transitsMenu = telegraf_1.Markup.inlineKeyboard([
+    telegraf_1.Markup.button.callback('Transito per codice palina', Command.GetTransitsByPoleCode)
+]);
+const vehiclesMenu = telegraf_1.Markup.inlineKeyboard([
+    telegraf_1.Markup.button.callback('Posizione veicolo per codice veicolo', Command.GetVehicleRealTimePositions)
+]);
+bot.action('POLES_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
+});
+bot.action('STOPS_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);
+});
+bot.action('TRANSITS_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', transitsMenu);
+});
+bot.action('VEHICLES_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', vehiclesMenu);
+});
 bot.start((ctx) => {
-    const welcomeMessage = 'Benvenuto cerca paline per:';
-    const keyboard = telegraf_1.Markup.inlineKeyboard([
-        telegraf_1.Markup.button.callback('Codice', Command.GetPolesByCode),
-        telegraf_1.Markup.button.callback('Posizione', Command.GetPolesByPosition),
-        telegraf_1.Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
-        telegraf_1.Markup.button.callback('Località di arrivo', Command.GetAllPolesDestinationsByArrival),
-        telegraf_1.Markup.button.callback('Fermate per località', Command.GetStopsByLocality),
-        telegraf_1.Markup.button.callback('Prima fermata per località', Command.GetFirstStopByLocality),
-        telegraf_1.Markup.button.callback('Transito per codice palina', Command.GetTransitsByPoleCode),
-        telegraf_1.Markup.button.callback('Posizione veicolo per codice veicolo', Command.GetVehicleRealTimePositions)
-    ]);
-    ctx.reply(welcomeMessage, keyboard);
+    ctx.reply('Benvenuto, seleziona un\'opzione:', mainMenu);
 });
 bot.on('text', async (ctx) => {
     const myCtx = ctx;

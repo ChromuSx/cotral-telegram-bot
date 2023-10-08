@@ -92,19 +92,51 @@ async function handleCommand(myCtx: MyContext, text: string) {
 }
 
 
+const mainMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Paline', 'POLES_MENU'),
+    Markup.button.callback('Fermate', 'STOPS_MENU'),
+    Markup.button.callback('Transiti', 'TRANSITS_MENU'),
+    Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
+]);
+
+const polesMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Codice', Command.GetPolesByCode),
+    Markup.button.callback('Posizione', Command.GetPolesByPosition),
+    Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
+    Markup.button.callback('Località di arrivo', Command.GetAllPolesDestinationsByArrival)
+]);
+
+const stopsMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Fermate per località', Command.GetStopsByLocality),
+    Markup.button.callback('Prima fermata per località', Command.GetFirstStopByLocality)
+]);
+
+const transitsMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Transito per codice palina', Command.GetTransitsByPoleCode)
+]);
+
+const vehiclesMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Posizione veicolo per codice veicolo', Command.GetVehicleRealTimePositions)
+]);
+
+bot.action('POLES_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
+});
+
+bot.action('STOPS_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);
+});
+
+bot.action('TRANSITS_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', transitsMenu);
+});
+
+bot.action('VEHICLES_MENU', async (ctx) => {
+    await ctx.editMessageText('Seleziona un\'opzione:', vehiclesMenu);
+});
+
 bot.start((ctx) => {
-    const welcomeMessage = 'Benvenuto cerca paline per:';
-    const keyboard = Markup.inlineKeyboard([
-        Markup.button.callback('Codice', Command.GetPolesByCode),
-        Markup.button.callback('Posizione', Command.GetPolesByPosition),
-        Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
-        Markup.button.callback('Località di arrivo', Command.GetAllPolesDestinationsByArrival),
-        Markup.button.callback('Fermate per località', Command.GetStopsByLocality),
-        Markup.button.callback('Prima fermata per località', Command.GetFirstStopByLocality),
-        Markup.button.callback('Transito per codice palina', Command.GetTransitsByPoleCode),
-        Markup.button.callback('Posizione veicolo per codice veicolo', Command.GetVehicleRealTimePositions)
-    ]);
-    ctx.reply(welcomeMessage, keyboard);
+    ctx.reply('Benvenuto, seleziona un\'opzione:', mainMenu);
 });
 
 bot.on('text', async (ctx: any) => {

@@ -6,6 +6,7 @@ export interface Pole {
     comune?: string;
     coordX?: number;
     coordY?: number;
+    mapLink?: string;
     zonaTariffaria?: string;
     distanza?: string;
     destinazioni?: string[];

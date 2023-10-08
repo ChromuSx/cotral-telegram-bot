@@ -6,15 +6,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetch = exports.logError = exports.formatFetchedData = exports.handleApiResponse = void 0;
 const axiosService_1 = __importDefault(require("../services/axiosService"));
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
-async function handleApiResponse(ctx, apiUrl, formatter) {
+async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) {
     if (!apiUrl) {
         ctx.reply('Per favore, fornisci parametri validi.');
         return;
     }
     try {
         const data = await fetch(apiUrl);
-        const message = formatFetchedData(data, formatter);
-        ctx.reply(message);
+        if (Array.isArray(data)) {
+            if (isStringArray) {
+                const message = formatter(data);
+                await ctx.reply(message);
+            }
+            else {
+                for (const item of data) {
+                    const message = formatter(item);
+                    await ctx.reply(message);
+                    if (item.coordX && item.coordY) {
+                        await ctx.sendLocation(item.coordX, item.coordY);
+                    }
+                }
+            }
+        }
+        else {
+            const message = formatFetchedData(data, formatter);
+            await ctx.reply(message);
+            if (data && data.coordX && data.coordY) {
+                await ctx.sendLocation(data.coordX, data.coordY);
+            }
+        }
     }
     catch (error) {
         logError(error);
@@ -25,7 +45,7 @@ exports.handleApiResponse = handleApiResponse;
 function formatFetchedData(data, formatData) {
     if (Array.isArray(data)) {
         if (data.length > 0) {
-            if (typeof data[0] === 'string') {
+            if (data.every(item => typeof item === 'string')) {
                 return data.join(', ');
             }
             return data.map(formatData).join('\n----------\n');

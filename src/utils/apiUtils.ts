@@ -2,8 +2,12 @@ import { Context } from "telegraf";
 import api from "../services/axiosService";
 
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
-
-export async function handleApiResponse<T>(ctx: Context, apiUrl: string | null, formatter: (data: T) => string): Promise<void> {
+export async function handleApiResponse<T>(
+    ctx: Context, 
+    apiUrl: string | null, 
+    formatter: (data: T) => string, 
+    isStringArray: boolean = false
+): Promise<void> {
     if (!apiUrl) {
         ctx.reply('Per favore, fornisci parametri validi.');
         return;
@@ -11,8 +15,29 @@ export async function handleApiResponse<T>(ctx: Context, apiUrl: string | null, 
 
     try {
         const data = await fetch<T>(apiUrl);
-        const message = formatFetchedData(data, formatter);
-        ctx.reply(message);
+
+        if (Array.isArray(data)) {
+            if (isStringArray) {
+                const message = formatter(data as unknown as T);
+                await ctx.reply(message);
+            } else {
+                for (const item of data) {
+                    const message = formatter(item);
+                    await ctx.reply(message);
+                    
+                    if (item.coordX && item.coordY) {
+                        await ctx.sendLocation(item.coordX, item.coordY);
+                    }
+                }
+            }
+        } else {
+            const message = formatFetchedData(data, formatter);
+            await ctx.reply(message);
+
+            if (data && data.coordX && data.coordY) {
+                await ctx.sendLocation(data.coordX, data.coordY);
+            }
+        }
     } catch (error) {
         logError(error);
         ctx.reply('Si è verificato un errore durante il recupero dei dati');
@@ -22,7 +47,7 @@ export async function handleApiResponse<T>(ctx: Context, apiUrl: string | null, 
 export function formatFetchedData<T>(data: void, formatData: (data: T) => string): string {
     if (Array.isArray(data)) {
         if (data.length > 0) {
-            if (typeof data[0] === 'string') {
+            if (data.every(item => typeof item === 'string')) {
                 return data.join(', ');
             }
             return data.map(formatData).join('\n----------\n');
@@ -37,12 +62,12 @@ export function logError(error: unknown): void {
     console.error('Errore:', typedError.message || 'Errore sconosciuto');
 }
 
-export async function fetch<T>(apiUrl: string): Promise<void> {
+export async function fetch<T>(apiUrl: string): Promise<any> {
     try {
-      const response = await api.get<void>(apiUrl);
-      return response.data;
+        const response = await api.get<void>(apiUrl);
+        return response.data;
     } catch (error) {
-      logError(error);
-      throw new Error('Si è verificato un errore durante il recupero dei dati');
+        logError(error);
+        throw new Error('Si è verificato un errore durante il recupero dei dati');
     }
-  }
+}

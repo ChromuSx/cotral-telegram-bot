@@ -1,10 +1,12 @@
 import { Context } from 'telegraf';
 import { Pole } from '../interfaces/Pole';
 import { MyContext } from '../interfaces/MyContext';
-import { handleApiResponse } from '../utils/apiUtils';
+import { handleApiResponse, logError } from '../utils/apiUtils';
+import api from '../services/axiosService';
 
-export async function getPolesByCode(ctx: Context, code: string): Promise<void> {
-    const apiUrl = `/poles/${code}`;
+export async function getPolesByCode(ctx: Context, code: string, params: { userId?: number | undefined }): Promise<void> {
+    const { userId } = params;
+    const apiUrl = `/poles/${code}?userId=${userId}`;
     await handleApiResponse(ctx, apiUrl, formatPoleMessage);
 }
 
@@ -25,10 +27,42 @@ export async function getAllPolesDestinationsByArrivalLocality(ctx: Context, arr
     await handleApiResponse(ctx, apiUrl, formatStringArray, true);
 }
 
+export async function getFavoritePoles(ctx: Context, userId: number): Promise<void> {
+    const apiUrl = `/poles/favorites/${userId}`;
+    await handleApiResponse(ctx, apiUrl, formatPoleMessage);
+}
+
+export async function addFavoritePole(ctx: Context, poleCode: string, stopCode: string, userId: number): Promise<void> {
+    const apiUrl = '/poles/favorites';
+    const requestBody = { userId, poleCode, stopCode };
+
+    try {
+        await api.post(apiUrl, requestBody);
+        await ctx.reply('Palo aggiunto ai preferiti con successo!');
+    } catch (error) {
+        logError(error);
+        await ctx.reply('Si è verificato un errore durante l\'aggiunta del palo ai preferiti.');
+    }
+}
+
+export async function removeFavoritePole(ctx: Context, poleCode: string, userId: number): Promise<void> {
+    const apiUrl = '/poles/favorites';
+    const requestBody = { userId, poleCode };
+
+    try {
+        await api.delete(apiUrl, { data: requestBody });
+        await ctx.reply('Palo rimosso dai preferiti con successo!');
+    } catch (error) {
+        logError(error);
+        await ctx.reply('Si è verificato un errore durante la rimozione del palo dai preferiti.');
+    }
+}
+
 function formatPoleMessage(pole: Pole): string {
     return [
         `Palina:`,
         `Codice Palina: ${pole.codicePalina ?? 'Non disponibile'}`,
+        `Codice Stop: ${pole.codiceStop ?? 'Non disponibile'}`,
         `Nome Palina: ${pole.nomePalina ?? 'Non disponibile'}`,
         `Nome Stop: ${pole.nomeStop ?? 'Non disponibile'}`,
         `Località: ${pole.localita ?? 'Non disponibile'}`,

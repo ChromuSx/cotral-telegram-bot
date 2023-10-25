@@ -10,7 +10,7 @@ import { registerStopsBotActions } from './botActions/stopsbotActions';
 import { registerTransitsBotActions } from './botActions/transitsBotActions';
 import { registerVehiclesBotActions } from './botActions/vehiclesBotActions';
 
-const bot = new Telegraf('6607824270:AAEutzYyOLNKJ7Vh77vaeF33wetpwvPQiv8');
+const bot = new Telegraf('');
 const localSession = new LocalSession({ database: 'session_db.json' });
 
 bot.use(localSession.middleware('session'));
@@ -20,6 +20,7 @@ bot.use((ctx, next) => {
 });
 
 enum Command {
+    GetFavoritePoles = 'getfavoritepoles',
     GetPolesByCode = 'getpolesbycode',
     GetPolesByPosition = 'getpolesbyposition',
     GetPoleByArrivalAndDestination = 'getpolebyarrivalanddestination',
@@ -45,9 +46,20 @@ async function handleErrors(ctx: Context, error: unknown) {
 
 async function handleCommand(myCtx: MyContext, text: string) {
     try {
+        const userId = myCtx.from?.id;
+
+        switch (text) {
+            case '/getpolesbycode':
+                await myCtx.reply('Inserisci il codice:');
+                myCtx.session.command = 'getpolesbycode';
+                return;
+            default:
+                break;
+        }
+
         switch (myCtx.session.command) {
             case Command.GetPolesByCode:
-                await polesCommands.getPolesByCode(myCtx, text);
+                await polesCommands.getPolesByCode(myCtx, text, { userId });
                 myCtx.session.command = undefined;
                 break;
             case Command.GetPoleByArrivalAndDestination:
@@ -100,6 +112,7 @@ const mainMenu = Markup.inlineKeyboard([
 ]);
 
 const polesMenu = Markup.inlineKeyboard([
+    Markup.button.callback('Preferiti', `poles:${Command.GetFavoritePoles}`),
     Markup.button.callback('Codice', Command.GetPolesByCode),
     Markup.button.callback('Posizione', Command.GetPolesByPosition),
     Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
@@ -135,6 +148,16 @@ bot.action('VEHICLES_MENU', async (ctx) => {
     await ctx.editMessageText('Seleziona un\'opzione:', vehiclesMenu);
 });
 
+async function registerCommands() {
+    await bot.telegram.setMyCommands([
+        { command: '/getfavoritepoles', description: 'Ottieni le tue paline preferite' },
+        { command: '/getpolesbycode', description: 'Ottieni paline per codice' },
+        // ... (aggiungi altri comandi qui)
+    ]);
+}
+
+registerCommands();
+
 bot.start((ctx) => {
     ctx.reply('Benvenuto, seleziona un\'opzione:', mainMenu);
 });
@@ -151,12 +174,45 @@ bot.on('location', async (ctx: any) => {
         const latitude = ctx.message?.location?.latitude;
         const longitude = ctx.message?.location?.longitude;
         if (latitude && longitude) {
-            await polesCommands.getPolesByPosition(myCtx, { latitude, longitude }); 
+            await polesCommands.getPolesByPosition(myCtx, { latitude, longitude });
             myCtx.session.command = undefined;
         } else {
             await sendMessage(ctx, 'Posizione non valida');
         }
     }
 });
+
+bot.on('callback_query', async (ctx) => {
+    if ('data' in ctx.callbackQuery) {
+        const callbackData = ctx.callbackQuery.data;
+        const [contextAction, action, firstArgument, secondArgument] = callbackData.split(':');
+
+        const userId = ctx.from?.id;
+
+        if (contextAction === 'transits' && firstArgument) {
+            if (action === 'getTransits') {
+                await transitsCommands.getTransitsByPoleCode(ctx, firstArgument);
+            }
+        } else if (contextAction === 'poles') {
+            if (userId) {
+                if (action === 'add_favorite') {
+                    if (firstArgument && secondArgument) {
+                        await polesCommands.addFavoritePole(ctx, firstArgument, secondArgument, userId);
+                    }
+                } else if (action === 'remove_favorite') {
+                    if (firstArgument) {
+                        await polesCommands.removeFavoritePole(ctx, firstArgument, userId);
+                    }
+                } else if (action === Command.GetFavoritePoles) {
+                    await polesCommands.getFavoritePoles(ctx, userId);
+                }
+            } else {
+                await sendMessage(ctx, 'UserID non trovato');
+            }
+        }
+    }
+});
+
+
 
 export default bot;

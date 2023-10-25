@@ -11,7 +11,6 @@ export async function getTransitsByPoleCode(ctx: Context, poleCode: string): Pro
     });
 }
 
-
 function formatTransitMessage(transit: Transit): string {
     const formatDateTime = (dateString: string | null): string => {
         if (!dateString) return 'Non disponibile';

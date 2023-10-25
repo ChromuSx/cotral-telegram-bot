@@ -21,7 +21,26 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
             else {
                 for (const item of data) {
                     const message = formatter(item);
-                    await ctx.reply(message);
+                    const inlineKeyboard = [];
+                    if (item.codicePalina) {
+                        inlineKeyboard.push([{ text: "Transiti", callback_data: `transits:getTransits${item.codicePalina}` }]);
+                        if (item.preferita) {
+                            inlineKeyboard.push([{ text: "Rimuovi dai preferiti", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
+                        }
+                        else {
+                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
+                        }
+                    }
+                    if (inlineKeyboard.length > 0) {
+                        await ctx.reply(message, {
+                            reply_markup: {
+                                inline_keyboard: inlineKeyboard
+                            }
+                        });
+                    }
+                    else {
+                        await ctx.reply(message);
+                    }
                     if (item.coordX && item.coordY) {
                         await ctx.sendLocation(item.coordX, item.coordY);
                     }

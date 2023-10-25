@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerPolesBotActions = void 0;
 const telegraf_1 = require("telegraf");
 function registerPolesBotActions(bot) {
+    bot.action('getfavoritepoles', async (ctx) => {
+        const myCtx = ctx;
+        myCtx.session.command = 'getfavoritepoles';
+    });
     bot.action('getpolesbycode', async (ctx) => {
         const myCtx = ctx;
         await myCtx.reply('Inserisci il codice:');

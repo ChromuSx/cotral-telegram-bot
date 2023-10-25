@@ -3,7 +3,8 @@
     {
       "id": "704395182:704395182",
       "data": {
-        "params": {}
+        "params": {},
+        "step": "arrival"
       }
     }
   ]

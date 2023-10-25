@@ -3,6 +3,11 @@ import { MyContext } from "../interfaces/MyContext";
 
 export function registerPolesBotActions(bot: any) {
 
+    bot.action('getfavoritepoles', async (ctx: any) => {
+        const myCtx = ctx as MyContext;
+        myCtx.session.command = 'getfavoritepoles';
+    });
+
     bot.action('getpolesbycode', async (ctx: any) => {
         const myCtx = ctx as MyContext;
         await myCtx.reply('Inserisci il codice:');

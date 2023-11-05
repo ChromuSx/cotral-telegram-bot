@@ -1,16 +1,27 @@
-import { MyContext } from "../interfaces/MyContext";
+import { Markup } from "telegraf";
+import { ExtendedContext } from "../interfaces/ExtendedContext";
+import { StopsCommands } from "../commands/stopsCommands";
 
 export function registerStopsBotActions(bot: any) {
 
-    bot.action('getStopsByLocality', async (ctx: any) => {
-        const myCtx = ctx as MyContext;
-        await myCtx.reply('Inserisci la località:');
-        myCtx.session.command = 'getStopsByLocality';
+    const stopsMenu = Markup.inlineKeyboard([
+        Markup.button.callback('Fermate per località', StopsCommands.GetStopsByLocality),
+        Markup.button.callback('Prima fermata per località', StopsCommands.GetFirstStopByLocality)
+    ]);
+    
+    bot.action('STOPS_MENU', async (ctx: any) => {
+        await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);
     });
 
-    bot.action('getFirstStopByLocality', async (ctx: any) => {
-        const myCtx = ctx as MyContext;
+    bot.action(StopsCommands.GetStopsByLocality, async (ctx: any) => {
+        const myCtx = ctx as ExtendedContext;
         await myCtx.reply('Inserisci la località:');
-        myCtx.session.command = 'getFirstStopByLocality';
+        myCtx.session.command = StopsCommands.GetStopsByLocality;
+    });
+
+    bot.action(StopsCommands.GetFirstStopByLocality, async (ctx: any) => {
+        const myCtx = ctx as ExtendedContext;
+        await myCtx.reply('Inserisci la località:');
+        myCtx.session.command = StopsCommands.GetFirstStopByLocality;
     });
 }

@@ -16,9 +16,13 @@ export async function handleApiResponse<T>(
     try {
         const data = await fetch<T>(apiUrl);
         if (Array.isArray(data)) {
+            if (data.length === 0) {
+                await ctx.reply(NO_DATA_MESSAGE);
+                return;
+            }
             if (isStringArray) {
                 const message = formatter(data as unknown as T);
-                await ctx.reply(message);
+                 await ctx.reply(message);
             } else {
                 for (const item of data) {
                     const message = formatter(item);

@@ -2,19 +2,30 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerPolesBotActions = void 0;
 const telegraf_1 = require("telegraf");
+const polesCommands_1 = require("../commands/polesCommands");
 function registerPolesBotActions(bot) {
-    bot.action('getfavoritepoles', async (ctx) => {
+    const polesMenu = telegraf_1.Markup.inlineKeyboard([
+        telegraf_1.Markup.button.callback('Preferiti', `poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`),
+        telegraf_1.Markup.button.callback('Codice', polesCommands_1.PolesCommands.GetPolesByCode),
+        telegraf_1.Markup.button.callback('Posizione', polesCommands_1.PolesCommands.GetPolesByPosition),
+        telegraf_1.Markup.button.callback('Arrivo e destinazione', polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination),
+        telegraf_1.Markup.button.callback('Località di arrivo', polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival)
+    ]);
+    bot.action('POLES_MENU', async (ctx) => {
+        await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
+    });
+    bot.action(polesCommands_1.PolesCommands.GetFavoritePoles, async (ctx) => {
         const myCtx = ctx;
         myCtx.session.command = 'getfavoritepoles';
     });
-    bot.action('getpolesbycode', async (ctx) => {
+    bot.action(polesCommands_1.PolesCommands.GetPolesByCode, async (ctx) => {
         const myCtx = ctx;
         await myCtx.reply('Inserisci il codice:');
-        myCtx.session.command = 'getpolesbycode';
+        myCtx.session.command = polesCommands_1.PolesCommands.GetPolesByCode;
     });
-    bot.action('getpolesbyposition', async (ctx) => {
+    bot.action(polesCommands_1.PolesCommands.GetPolesByPosition, async (ctx) => {
         const myCtx = ctx;
-        myCtx.session.command = 'getpolesbyposition';
+        myCtx.session.command = polesCommands_1.PolesCommands.GetPolesByPosition;
         const keyboard = telegraf_1.Markup.inlineKeyboard([
             telegraf_1.Markup.button.callback('Usa la mia posizione attuale', 'use_current_position'),
             telegraf_1.Markup.button.callback('Inserisco manualmente', 'enter_position_manually')
@@ -31,17 +42,17 @@ function registerPolesBotActions(bot) {
         const myCtx = ctx;
         await myCtx.reply('Per favore, invia la posizione utilizzando l\'icona graffetta ("📎") e poi "Posizione".');
     });
-    bot.action('getpolebyarrivalanddestination', async (ctx) => {
+    bot.action(polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination, async (ctx) => {
         const myCtx = ctx;
-        myCtx.session.command = 'getpolebyarrivalanddestination';
+        myCtx.session.command = polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination;
         myCtx.session.step = 'arrival';
         myCtx.session.params = {};
         await myCtx.reply(`Inserisci l'arrivo:`);
     });
-    bot.action('getallpolesdestinationsbyarrival', async (ctx) => {
+    bot.action(polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival, async (ctx) => {
         const myCtx = ctx;
         await myCtx.reply('Inserisci la località di arrivo:');
-        myCtx.session.command = 'getallpolesdestinationsbyarrival';
+        myCtx.session.command = polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival;
     });
 }
 exports.registerPolesBotActions = registerPolesBotActions;

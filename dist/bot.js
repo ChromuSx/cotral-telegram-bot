@@ -27,34 +27,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const telegraf_1 = require("telegraf");
-const polesCommands = __importStar(require("./commands/polesCommands"));
-const stopsCommands = __importStar(require("./commands/stopsCommands"));
-const transitsCommands = __importStar(require("./commands/transitsCommands"));
-const vehiclesCommands = __importStar(require("./commands/vehiclesCommands"));
+const polesCommands = __importStar(require("./apiHandlers/polesApiHandler"));
+const stopsCommands = __importStar(require("./apiHandlers/stopsApiHandler"));
+const transitsCommands = __importStar(require("./apiHandlers/transitsApiHandler"));
+const vehiclesCommands = __importStar(require("./apiHandlers/vehiclesApiHandler"));
 const telegraf_session_local_1 = __importDefault(require("telegraf-session-local"));
 const polesBotActions_1 = require("./botActions/polesBotActions");
 const stopsbotActions_1 = require("./botActions/stopsbotActions");
 const transitsBotActions_1 = require("./botActions/transitsBotActions");
 const vehiclesBotActions_1 = require("./botActions/vehiclesBotActions");
-const bot = new telegraf_1.Telegraf('');
+const polesCommands_1 = require("./commands/polesCommands");
+const stopsCommands_1 = require("./commands/stopsCommands");
+const transitsCommands_1 = require("./commands/transitsCommands");
+const vehiclesCommands_1 = require("./commands/vehiclesCommands");
+const telegrafUtils_1 = require("./utils/telegrafUtils");
+const bot = new telegraf_1.Telegraf('5961534596:AAEa7wTXZX4XEG0B-gd-XPvjxoVFglkBtCk');
 const localSession = new telegraf_session_local_1.default({ database: 'session_db.json' });
 bot.use(localSession.middleware('session'));
 bot.use((ctx, next) => {
     const myCtx = ctx;
     return next();
 });
-var Command;
-(function (Command) {
-    Command["GetFavoritePoles"] = "getfavoritepoles";
-    Command["GetPolesByCode"] = "getpolesbycode";
-    Command["GetPolesByPosition"] = "getpolesbyposition";
-    Command["GetPoleByArrivalAndDestination"] = "getpolebyarrivalanddestination";
-    Command["GetAllPolesDestinationsByArrival"] = "getallpolesdestinationsbyarrival";
-    Command["GetStopsByLocality"] = "getStopsByLocality";
-    Command["GetFirstStopByLocality"] = "getFirstStopByLocality";
-    Command["GetTransitsByPoleCode"] = "getTransitsByPoleCode";
-    Command["GetVehicleRealTimePositions"] = "getVehicleRealTimePositions";
-})(Command || (Command = {}));
 (0, polesBotActions_1.registerPolesBotActions)(bot);
 (0, stopsbotActions_1.registerStopsBotActions)(bot);
 (0, transitsBotActions_1.registerTransitsBotActions)(bot);
@@ -64,59 +57,86 @@ async function sendMessage(ctx, message) {
 }
 async function handleErrors(ctx, error) {
     console.error('Errore:', error);
+    await ctx.reply('Si è verificato un errore, riprova più tardi.');
 }
+async function registerCommands() {
+    await bot.telegram.setMyCommands([
+        { command: '/start', description: 'Avvia il bot' },
+        { command: `/${polesCommands_1.PolesCommands.GetFavoritePoles}`, description: 'Ottieni le tue paline preferite' },
+        { command: `/${polesCommands_1.PolesCommands.GetPolesByCode}`, description: 'Ottieni paline per codice' },
+        { command: `/${polesCommands_1.PolesCommands.GetPolesByPosition}`, description: 'Ottieni paline per posizione' },
+        { command: `/${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`, description: 'Ottieni palina per arrivo e destinazione' },
+        { command: `/${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`, description: 'Ottieni tutte le destinazioni per arrivo' },
+        { command: `/${stopsCommands_1.StopsCommands.GetStopsByLocality}`, description: 'Ottieni fermate per località' },
+        { command: `/${stopsCommands_1.StopsCommands.GetFirstStopByLocality}`, description: 'Ottieni prima fermata per località' },
+        { command: `/${transitsCommands_1.TransitsCommands.GetTransitsByPoleCode}`, description: 'Ottieni transiti per codice palina' },
+        { command: `/${vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions}`, description: 'Ottieni posizione veicolo per codice veicolo' },
+    ]);
+}
+registerCommands();
+const commandActions = {
+    [`/${polesCommands_1.PolesCommands.GetPolesByCode}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice:', polesCommands_1.PolesCommands.GetPolesByCode),
+    [`/${polesCommands_1.PolesCommands.GetPolesByPosition}`]: async (ctx) => {
+        ctx.session.command = polesCommands_1.PolesCommands.GetPolesByPosition;
+        const keyboard = telegraf_1.Markup.inlineKeyboard([
+            telegraf_1.Markup.button.callback('Usa la mia posizione attuale', 'use_current_position'),
+            telegraf_1.Markup.button.callback('Inserisco manualmente', 'enter_position_manually'),
+        ]);
+        await ctx.reply('Vuoi usare la tua posizione attuale o inserire una posizione manualmente?', keyboard);
+    },
+    [`/${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`]: async (ctx) => {
+        ctx.session.step = 'arrival';
+        (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci l\'arrivo:', polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination);
+    },
+    [`/${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località di arrivo:', polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival),
+    [`/${stopsCommands_1.StopsCommands.GetStopsByLocality}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località:', stopsCommands_1.StopsCommands.GetStopsByLocality),
+    [`/${stopsCommands_1.StopsCommands.GetFirstStopByLocality}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località:', stopsCommands_1.StopsCommands.GetFirstStopByLocality),
+    [`/${transitsCommands_1.TransitsCommands.GetTransitsByPoleCode}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice della palina:', transitsCommands_1.TransitsCommands.GetTransitsByPoleCode),
+    [`/${vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice del veicolo:', vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions),
+    [`/${polesCommands_1.PolesCommands.GetFavoritePoles}`]: async (ctx, userId) => {
+        if (userId) {
+            await polesCommands.getFavoritePoles(ctx, userId);
+        }
+        else {
+            await sendMessage(ctx, 'UserID non trovato');
+        }
+    }
+};
+const sessionActions = {
+    [polesCommands_1.PolesCommands.GetPolesByCode]: async (ctx, text, userId) => await polesCommands.getPolesByCode(ctx, text, { userId }),
+    [polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination]: async (ctx, text) => {
+        if (ctx.session.step === 'arrival') {
+            ctx.session.params.arrival = text;
+            ctx.session.step = 'destination';
+            await ctx.reply(`Inserisci la destinazione:`);
+        }
+        else if (ctx.session.step === 'destination') {
+            ctx.session.params.destination = text;
+            await polesCommands.getPoleByArrivalAndDestinationLocality(ctx, ctx.session.params);
+            ctx.session.command = undefined;
+            ctx.session.step = undefined;
+            ctx.session.params = {};
+        }
+    },
+    [polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival]: async (ctx, text) => await polesCommands.getAllPolesDestinationsByArrivalLocality(ctx, text),
+    [stopsCommands_1.StopsCommands.GetStopsByLocality]: async (ctx, text) => await stopsCommands.getStopsByLocality(ctx, text),
+    [stopsCommands_1.StopsCommands.GetFirstStopByLocality]: async (ctx, text) => await stopsCommands.getFirstStopByLocality(ctx, text),
+    [transitsCommands_1.TransitsCommands.GetTransitsByPoleCode]: async (ctx, text) => await transitsCommands.getTransitsByPoleCode(ctx, text),
+    [vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions]: async (ctx, text) => await vehiclesCommands.getVehicleRealTimePositions(ctx, text),
+};
 async function handleCommand(myCtx, text) {
     try {
         const userId = myCtx.from?.id;
-        switch (text) {
-            case '/getpolesbycode':
-                await myCtx.reply('Inserisci il codice:');
-                myCtx.session.command = 'getpolesbycode';
-                return;
-            default:
-                break;
+        const commandAction = commandActions[text];
+        const sessionAction = myCtx.session.command ? sessionActions[myCtx.session.command] : undefined;
+        if (commandAction) {
+            await commandAction(myCtx, userId);
         }
-        switch (myCtx.session.command) {
-            case Command.GetPolesByCode:
-                await polesCommands.getPolesByCode(myCtx, text, { userId });
-                myCtx.session.command = undefined;
-                break;
-            case Command.GetPoleByArrivalAndDestination:
-                if (myCtx.session.step === 'arrival') {
-                    myCtx.session.params.arrival = text;
-                    myCtx.session.step = 'destination';
-                    await myCtx.reply(`Inserisci la destinazione:`);
-                }
-                else if (myCtx.session.step === 'destination') {
-                    myCtx.session.params.destination = text;
-                    await polesCommands.getPoleByArrivalAndDestinationLocality(myCtx, myCtx.session.params);
-                    myCtx.session.command = undefined;
-                    myCtx.session.step = undefined;
-                    myCtx.session.params = {};
-                }
-                break;
-            case Command.GetAllPolesDestinationsByArrival:
-                await polesCommands.getAllPolesDestinationsByArrivalLocality(myCtx, text);
-                myCtx.session.command = undefined;
-                break;
-            case Command.GetStopsByLocality:
-                await stopsCommands.getStopsByLocality(myCtx, text);
-                myCtx.session.command = undefined;
-                break;
-            case Command.GetFirstStopByLocality:
-                await stopsCommands.getFirstStopByLocality(myCtx, text);
-                myCtx.session.command = undefined;
-                break;
-            case Command.GetTransitsByPoleCode:
-                await transitsCommands.getTransitsByPoleCode(myCtx, text);
-                myCtx.session.command = undefined;
-                break;
-            case Command.GetVehicleRealTimePositions:
-                await vehiclesCommands.getVehicleRealTimePositions(myCtx, text);
-                myCtx.session.command = undefined;
-                break;
-            default:
-                await sendMessage(myCtx, 'Comando non riconosciuto');
+        else if (sessionAction) {
+            await sessionAction(myCtx, text, userId);
+        }
+        else {
+            await sendMessage(myCtx, 'Comando non riconosciuto');
         }
     }
     catch (error) {
@@ -129,43 +149,6 @@ const mainMenu = telegraf_1.Markup.inlineKeyboard([
     telegraf_1.Markup.button.callback('Transiti', 'TRANSITS_MENU'),
     telegraf_1.Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
 ]);
-const polesMenu = telegraf_1.Markup.inlineKeyboard([
-    telegraf_1.Markup.button.callback('Preferiti', `poles:${Command.GetFavoritePoles}`),
-    telegraf_1.Markup.button.callback('Codice', Command.GetPolesByCode),
-    telegraf_1.Markup.button.callback('Posizione', Command.GetPolesByPosition),
-    telegraf_1.Markup.button.callback('Arrivo e destinazione', Command.GetPoleByArrivalAndDestination),
-    telegraf_1.Markup.button.callback('Località di arrivo', Command.GetAllPolesDestinationsByArrival)
-]);
-const stopsMenu = telegraf_1.Markup.inlineKeyboard([
-    telegraf_1.Markup.button.callback('Fermate per località', Command.GetStopsByLocality),
-    telegraf_1.Markup.button.callback('Prima fermata per località', Command.GetFirstStopByLocality)
-]);
-const transitsMenu = telegraf_1.Markup.inlineKeyboard([
-    telegraf_1.Markup.button.callback('Transito per codice palina', Command.GetTransitsByPoleCode)
-]);
-const vehiclesMenu = telegraf_1.Markup.inlineKeyboard([
-    telegraf_1.Markup.button.callback('Posizione veicolo per codice veicolo', Command.GetVehicleRealTimePositions)
-]);
-bot.action('POLES_MENU', async (ctx) => {
-    await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
-});
-bot.action('STOPS_MENU', async (ctx) => {
-    await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);
-});
-bot.action('TRANSITS_MENU', async (ctx) => {
-    await ctx.editMessageText('Seleziona un\'opzione:', transitsMenu);
-});
-bot.action('VEHICLES_MENU', async (ctx) => {
-    await ctx.editMessageText('Seleziona un\'opzione:', vehiclesMenu);
-});
-async function registerCommands() {
-    await bot.telegram.setMyCommands([
-        { command: '/getfavoritepoles', description: 'Ottieni le tue paline preferite' },
-        { command: '/getpolesbycode', description: 'Ottieni paline per codice' },
-        // ... (aggiungi altri comandi qui)
-    ]);
-}
-registerCommands();
 bot.start((ctx) => {
     ctx.reply('Benvenuto, seleziona un\'opzione:', mainMenu);
 });
@@ -176,7 +159,7 @@ bot.on('text', async (ctx) => {
 });
 bot.on('location', async (ctx) => {
     const myCtx = ctx;
-    if (myCtx.session.command === Command.GetPolesByPosition) {
+    if (myCtx.session.command === polesCommands_1.PolesCommands.GetPolesByPosition) {
         const latitude = ctx.message?.location?.latitude;
         const longitude = ctx.message?.location?.longitude;
         if (latitude && longitude) {
@@ -210,7 +193,7 @@ bot.on('callback_query', async (ctx) => {
                         await polesCommands.removeFavoritePole(ctx, firstArgument, userId);
                     }
                 }
-                else if (action === Command.GetFavoritePoles) {
+                else if (action === polesCommands_1.PolesCommands.GetFavoritePoles) {
                     await polesCommands.getFavoritePoles(ctx, userId);
                 }
             }

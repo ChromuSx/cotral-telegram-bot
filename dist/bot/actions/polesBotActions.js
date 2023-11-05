@@ -6,11 +6,15 @@ const polesCommands_1 = require("../../commands/polesCommands");
 const telegrafUtils_1 = require("../../utils/telegrafUtils");
 function registerPolesBotActions(bot) {
     const polesMenu = telegraf_1.Markup.inlineKeyboard([
-        telegraf_1.Markup.button.callback('Preferiti', `poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`),
-        telegraf_1.Markup.button.callback('Codice', polesCommands_1.PolesCommands.GetPolesByCode),
-        telegraf_1.Markup.button.callback('Posizione', polesCommands_1.PolesCommands.GetPolesByPosition),
-        telegraf_1.Markup.button.callback('Arrivo e destinazione', polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination),
-        telegraf_1.Markup.button.callback('Località di arrivo', polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival)
+        [
+            telegraf_1.Markup.button.callback('Preferiti', `poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`),
+            telegraf_1.Markup.button.callback('Codice', `poles:${polesCommands_1.PolesCommands.GetPolesByCode}`),
+            telegraf_1.Markup.button.callback('Posizione', `poles:${polesCommands_1.PolesCommands.GetPolesByPosition}`)
+        ],
+        [
+            telegraf_1.Markup.button.callback('Arrivo e destinazione', `poles:${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`),
+            telegraf_1.Markup.button.callback('Località di arrivo', `poles:${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`)
+        ]
     ]);
     bot.action('POLES_MENU', async (ctx) => {
         await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);

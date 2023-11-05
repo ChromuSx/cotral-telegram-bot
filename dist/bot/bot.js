@@ -50,7 +50,7 @@ const mainMenu = telegraf_1.Markup.inlineKeyboard([
     telegraf_1.Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
 ]);
 bot.start((ctx) => {
-    ctx.reply('Benvenuto, seleziona un\'opzione:', mainMenu);
+    ctx.reply('Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀', mainMenu);
 });
 bot.on('text', async (ctx) => {
     const myCtx = ctx;

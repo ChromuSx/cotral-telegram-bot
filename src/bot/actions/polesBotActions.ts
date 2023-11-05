@@ -6,12 +6,17 @@ import { promptForInput } from "../../utils/telegrafUtils";
 export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
 
     const polesMenu = Markup.inlineKeyboard([
-        Markup.button.callback('Preferiti', `poles:${PolesCommands.GetFavoritePoles}`),
-        Markup.button.callback('Codice', PolesCommands.GetPolesByCode),
-        Markup.button.callback('Posizione', PolesCommands.GetPolesByPosition),
-        Markup.button.callback('Arrivo e destinazione', PolesCommands.GetPoleByArrivalAndDestination),
-        Markup.button.callback('Località di arrivo', PolesCommands.GetAllPolesDestinationsByArrival)
+        [
+            Markup.button.callback('Preferiti', `poles:${PolesCommands.GetFavoritePoles}`),
+            Markup.button.callback('Codice', `poles:${PolesCommands.GetPolesByCode}`),
+            Markup.button.callback('Posizione', `poles:${PolesCommands.GetPolesByPosition}`)
+        ],
+        [
+            Markup.button.callback('Arrivo e destinazione', `poles:${PolesCommands.GetPoleByArrivalAndDestination}`),
+            Markup.button.callback('Località di arrivo', `poles:${PolesCommands.GetAllPolesDestinationsByArrival}`)
+        ]
     ]);
+    
 
     bot.action('POLES_MENU', async (ctx: ExtendedContext) => {
         await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);

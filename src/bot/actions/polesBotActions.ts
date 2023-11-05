@@ -1,7 +1,7 @@
 import { Markup, Telegraf } from "telegraf";
-import { ExtendedContext } from "../interfaces/ExtendedContext";
-import { PolesCommands } from "../commands/polesCommands";
-import { promptForInput } from "../utils/telegrafUtils";
+import { ExtendedContext } from "../../interfaces/ExtendedContext";
+import { PolesCommands } from "../../commands/polesCommands";
+import { promptForInput } from "../../utils/telegrafUtils";
 
 export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
 

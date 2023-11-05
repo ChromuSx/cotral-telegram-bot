@@ -1,4 +1,4 @@
-import bot from './bot';
+import bot from './bot/bot';
 
 bot.launch().then(() => {
 	console.log('Il bot è avviato!');

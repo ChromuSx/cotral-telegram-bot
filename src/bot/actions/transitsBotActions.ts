@@ -1,7 +1,7 @@
 import { Markup, Telegraf } from "telegraf";
-import { ExtendedContext } from "../interfaces/ExtendedContext";
-import { TransitsCommands } from "../commands/transitsCommands";
-import { promptForInput } from "../utils/telegrafUtils";
+import { ExtendedContext } from "../../interfaces/ExtendedContext";
+import { TransitsCommands } from "../../commands/transitsCommands";
+import { promptForInput } from "../../utils/telegrafUtils";
 
 export function registerTransitsBotActions(bot: Telegraf<ExtendedContext>) {
     const transitsMenu = Markup.inlineKeyboard([

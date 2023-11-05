@@ -1,7 +1,7 @@
 import { Markup, Telegraf } from "telegraf";
-import { ExtendedContext } from "../interfaces/ExtendedContext";
-import { StopsCommands } from "../commands/stopsCommands";
-import { promptForInput } from "../utils/telegrafUtils";
+import { ExtendedContext } from "../../interfaces/ExtendedContext";
+import { StopsCommands } from "../../commands/stopsCommands";
+import { promptForInput } from "../../utils/telegrafUtils";
 
 export function registerStopsBotActions(bot: Telegraf<ExtendedContext>) {
 

@@ -26,6 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
 const telegraf_1 = require("telegraf");
 const polesCommands = __importStar(require("./apiHandlers/polesApiHandler"));
 const stopsCommands = __importStar(require("./apiHandlers/stopsApiHandler"));
@@ -41,11 +42,14 @@ const stopsCommands_1 = require("./commands/stopsCommands");
 const transitsCommands_1 = require("./commands/transitsCommands");
 const vehiclesCommands_1 = require("./commands/vehiclesCommands");
 const telegrafUtils_1 = require("./utils/telegrafUtils");
-const bot = new telegraf_1.Telegraf('5961534596:AAEa7wTXZX4XEG0B-gd-XPvjxoVFglkBtCk');
+const token = process.env.TELEGRAM_BOT_TOKEN;
+if (typeof token !== 'string') {
+    throw new Error('TELEGRAM_BOT_TOKEN must be set in environment.');
+}
+const bot = new telegraf_1.Telegraf(token);
 const localSession = new telegraf_session_local_1.default({ database: 'session_db.json' });
 bot.use(localSession.middleware('session'));
 bot.use((ctx, next) => {
-    const myCtx = ctx;
     return next();
 });
 (0, polesBotActions_1.registerPolesBotActions)(bot);
@@ -124,23 +128,23 @@ const sessionActions = {
     [transitsCommands_1.TransitsCommands.GetTransitsByPoleCode]: async (ctx, text) => await transitsCommands.getTransitsByPoleCode(ctx, text),
     [vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions]: async (ctx, text) => await vehiclesCommands.getVehicleRealTimePositions(ctx, text),
 };
-async function handleCommand(myCtx, text) {
+async function handleCommand(ctx, text) {
     try {
-        const userId = myCtx.from?.id;
+        const userId = ctx.from?.id;
         const commandAction = commandActions[text];
-        const sessionAction = myCtx.session.command ? sessionActions[myCtx.session.command] : undefined;
+        const sessionAction = ctx.session.command ? sessionActions[ctx.session.command] : undefined;
         if (commandAction) {
-            await commandAction(myCtx, userId);
+            await commandAction(ctx, userId);
         }
         else if (sessionAction) {
-            await sessionAction(myCtx, text, userId);
+            await sessionAction(ctx, text, userId);
         }
         else {
-            await sendMessage(myCtx, 'Comando non riconosciuto');
+            await sendMessage(ctx, 'Comando non riconosciuto');
         }
     }
     catch (error) {
-        handleErrors(myCtx, error);
+        handleErrors(ctx, error);
     }
 }
 const mainMenu = telegraf_1.Markup.inlineKeyboard([

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Context, Markup, Telegraf } from 'telegraf';
 import * as polesCommands from './apiHandlers/polesApiHandler';
 import * as stopsCommands from './apiHandlers/stopsApiHandler';
@@ -15,12 +16,17 @@ import { TransitsCommands } from './commands/transitsCommands';
 import { VehiclesCommands } from './commands/vehiclesCommands';
 import { promptForInput } from './utils/telegrafUtils';
 
-const bot = new Telegraf('5961534596:AAEa7wTXZX4XEG0B-gd-XPvjxoVFglkBtCk');
+const token = process.env.TELEGRAM_BOT_TOKEN;
+
+if (typeof token !== 'string') {
+  throw new Error('TELEGRAM_BOT_TOKEN must be set in environment.');
+}
+
+const bot = new Telegraf<ExtendedContext>(token);
 const localSession = new LocalSession({ database: 'session_db.json' });
 
 bot.use(localSession.middleware('session'));
 bot.use((ctx, next) => {
-    const myCtx = ctx as ExtendedContext;
     return next();
 });
 
@@ -105,21 +111,21 @@ const sessionActions: Record<string, (ctx: ExtendedContext, text: string, userId
     [VehiclesCommands.GetVehicleRealTimePositions]: async (ctx, text) => await vehiclesCommands.getVehicleRealTimePositions(ctx, text),
 };
 
-async function handleCommand(myCtx: ExtendedContext, text: string) {
+async function handleCommand(ctx: ExtendedContext, text: string) {
     try {
-        const userId = myCtx.from?.id;
+        const userId = ctx.from?.id;
         const commandAction = commandActions[text];
-        const sessionAction = myCtx.session.command ? sessionActions[myCtx.session.command] : undefined;
+        const sessionAction = ctx.session.command ? sessionActions[ctx.session.command] : undefined;
 
         if (commandAction) {
-            await commandAction(myCtx, userId);
+            await commandAction(ctx, userId);
         } else if (sessionAction) {
-            await sessionAction(myCtx, text, userId);
+            await sessionAction(ctx, text, userId);
         } else {
-            await sendMessage(myCtx, 'Comando non riconosciuto');
+            await sendMessage(ctx, 'Comando non riconosciuto');
         }
     } catch (error) {
-        handleErrors(myCtx, error);
+        handleErrors(ctx, error);
     }
 }
 

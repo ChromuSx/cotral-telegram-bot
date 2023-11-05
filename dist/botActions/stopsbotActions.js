@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerStopsBotActions = void 0;
 const telegraf_1 = require("telegraf");
 const stopsCommands_1 = require("../commands/stopsCommands");
+const telegrafUtils_1 = require("../utils/telegrafUtils");
 function registerStopsBotActions(bot) {
     const stopsMenu = telegraf_1.Markup.inlineKeyboard([
         telegraf_1.Markup.button.callback('Fermate per località', stopsCommands_1.StopsCommands.GetStopsByLocality),
@@ -12,14 +13,10 @@ function registerStopsBotActions(bot) {
         await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);
     });
     bot.action(stopsCommands_1.StopsCommands.GetStopsByLocality, async (ctx) => {
-        const myCtx = ctx;
-        await myCtx.reply('Inserisci la località:');
-        myCtx.session.command = stopsCommands_1.StopsCommands.GetStopsByLocality;
+        (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località:', stopsCommands_1.StopsCommands.GetStopsByLocality);
     });
     bot.action(stopsCommands_1.StopsCommands.GetFirstStopByLocality, async (ctx) => {
-        const myCtx = ctx;
-        await myCtx.reply('Inserisci la località:');
-        myCtx.session.command = stopsCommands_1.StopsCommands.GetFirstStopByLocality;
+        (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località:', stopsCommands_1.StopsCommands.GetFirstStopByLocality);
     });
 }
 exports.registerStopsBotActions = registerStopsBotActions;

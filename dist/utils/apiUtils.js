@@ -14,6 +14,7 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
     try {
         const data = await fetch(apiUrl);
         if (Array.isArray(data)) {
+            console.log(data);
             if (data.length === 0) {
                 await ctx.reply(NO_DATA_MESSAGE);
                 return;
@@ -27,7 +28,7 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
                     const message = formatter(item);
                     const inlineKeyboard = [];
                     if (item.codicePalina) {
-                        inlineKeyboard.push([{ text: "Transiti", callback_data: `transits:getTransits${item.codicePalina}` }]);
+                        inlineKeyboard.push([{ text: "Transiti", callback_data: `transits:getTransits:${item.codicePalina}` }]);
                         if (item.preferita) {
                             inlineKeyboard.push([{ text: "Rimuovi dai preferiti", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
                         }

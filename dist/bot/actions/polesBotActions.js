@@ -19,13 +19,13 @@ function registerPolesBotActions(bot) {
     bot.action('POLES_MENU', async (ctx) => {
         await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
     });
-    bot.action(polesCommands_1.PolesCommands.GetFavoritePoles, async (ctx) => {
+    bot.action(`poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`, async (ctx) => {
         ctx.session.command = polesCommands_1.PolesCommands.GetFavoritePoles;
     });
-    bot.action(polesCommands_1.PolesCommands.GetPolesByCode, async (ctx) => {
+    bot.action(`poles:${polesCommands_1.PolesCommands.GetPolesByCode}`, async (ctx) => {
         (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice:', polesCommands_1.PolesCommands.GetPolesByCode);
     });
-    bot.action(polesCommands_1.PolesCommands.GetPolesByPosition, async (ctx) => {
+    bot.action(`poles:${polesCommands_1.PolesCommands.GetPolesByPosition}`, async (ctx) => {
         ctx.session.command = polesCommands_1.PolesCommands.GetPolesByPosition;
         const keyboard = telegraf_1.Markup.inlineKeyboard([
             telegraf_1.Markup.button.callback('Usa la mia posizione attuale', 'use_current_position'),
@@ -41,13 +41,13 @@ function registerPolesBotActions(bot) {
     bot.action('enter_position_manually', async (ctx) => {
         await ctx.reply('Per favore, invia la posizione utilizzando l\'icona graffetta ("📎") e poi "Posizione".');
     });
-    bot.action(polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination, async (ctx) => {
+    bot.action(`poles:${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`, async (ctx) => {
         ctx.session.command = polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination;
         ctx.session.step = 'arrival';
         ctx.session.params = {};
         await ctx.reply(`Inserisci l'arrivo:`);
     });
-    bot.action(polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival, async (ctx) => {
+    bot.action(`poles:${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`, async (ctx) => {
         (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci la località di arrivo:', polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival);
     });
 }

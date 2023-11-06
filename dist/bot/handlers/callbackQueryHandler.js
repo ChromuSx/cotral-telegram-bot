@@ -28,6 +28,7 @@ const polesApiHandler = __importStar(require("../../apiHandlers/polesApiHandler"
 const transitsApiHandler = __importStar(require("../../apiHandlers/transitsApiHandler"));
 const polesCommands_1 = require("../../commands/polesCommands");
 async function handleCallbackQuery(ctx) {
+    console.log(ctx.callbackQuery);
     if ('data' in ctx.callbackQuery) {
         const callbackData = ctx.callbackQuery.data;
         const [contextAction, action, firstArgument, secondArgument] = callbackData.split(':');

@@ -22,15 +22,15 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
         await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
     });
 
-    bot.action(PolesCommands.GetFavoritePoles, async (ctx: ExtendedContext) => {
+    bot.action(`poles:${PolesCommands.GetFavoritePoles}`, async (ctx: ExtendedContext) => {
         ctx.session.command = PolesCommands.GetFavoritePoles;
     });
 
-    bot.action(PolesCommands.GetPolesByCode, async (ctx: ExtendedContext) => {
+    bot.action(`poles:${PolesCommands.GetPolesByCode}`, async (ctx: ExtendedContext) => {
         promptForInput(ctx, 'Inserisci il codice:', PolesCommands.GetPolesByCode);
     });
 
-    bot.action(PolesCommands.GetPolesByPosition, async (ctx: ExtendedContext) => {
+    bot.action(`poles:${PolesCommands.GetPolesByPosition}`, async (ctx: ExtendedContext) => {
         ctx.session.command = PolesCommands.GetPolesByPosition;
         const keyboard = Markup.inlineKeyboard([
             Markup.button.callback('Usa la mia posizione attuale', 'use_current_position'),
@@ -49,14 +49,14 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
         await ctx.reply('Per favore, invia la posizione utilizzando l\'icona graffetta ("📎") e poi "Posizione".');
     });
 
-    bot.action(PolesCommands.GetPoleByArrivalAndDestination, async (ctx: ExtendedContext) => {
+    bot.action(`poles:${PolesCommands.GetPoleByArrivalAndDestination}`, async (ctx: ExtendedContext) => {
         ctx.session.command = PolesCommands.GetPoleByArrivalAndDestination;
         ctx.session.step = 'arrival';
         ctx.session.params = {};
         await ctx.reply(`Inserisci l'arrivo:`);
     });
 
-    bot.action(PolesCommands.GetAllPolesDestinationsByArrival, async (ctx: ExtendedContext) => {
+    bot.action(`poles:${PolesCommands.GetAllPolesDestinationsByArrival}`, async (ctx: ExtendedContext) => {
         promptForInput(ctx, 'Inserisci la località di arrivo:', PolesCommands.GetAllPolesDestinationsByArrival);
     });
 }

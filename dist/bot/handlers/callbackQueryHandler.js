@@ -26,9 +26,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleCallbackQuery = void 0;
 const polesApiHandler = __importStar(require("../../apiHandlers/polesApiHandler"));
 const transitsApiHandler = __importStar(require("../../apiHandlers/transitsApiHandler"));
+const vehiclesApiHandler = __importStar(require("../../apiHandlers/vehiclesApiHandler"));
 const polesCommands_1 = require("../../commands/polesCommands");
 async function handleCallbackQuery(ctx) {
-    console.log(ctx.callbackQuery);
     if ('data' in ctx.callbackQuery) {
         const callbackData = ctx.callbackQuery.data;
         const [contextAction, action, firstArgument, secondArgument] = callbackData.split(':');
@@ -56,6 +56,11 @@ async function handleCallbackQuery(ctx) {
             }
             else {
                 await ctx.reply('UserID non trovato');
+            }
+        }
+        else if (contextAction === 'vehicles' && firstArgument) {
+            if (action === 'getVehicleRealTimePositions') {
+                await vehiclesApiHandler.getVehicleRealTimePositions(ctx, firstArgument);
             }
         }
     }

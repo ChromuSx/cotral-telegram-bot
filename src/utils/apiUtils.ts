@@ -1,5 +1,6 @@
 import { Context } from "telegraf";
 import api from "../services/axiosService";
+import { convertAndValidateCoords } from "./functions";
 
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
 export async function handleApiResponse<T>(
@@ -22,7 +23,7 @@ export async function handleApiResponse<T>(
             }
             if (isStringArray) {
                 const message = formatter(data as unknown as T);
-                 await ctx.reply(message);
+                await ctx.reply(message);
             } else {
                 for (const item of data) {
                     const message = formatter(item);
@@ -48,7 +49,10 @@ export async function handleApiResponse<T>(
                     }
                     
                     if (item.coordX && item.coordY) {
-                        await ctx.sendLocation(item.coordX, item.coordY);
+                        const coords = convertAndValidateCoords(item.coordX, item.coordY);
+                        if (coords) {
+                            await ctx.sendLocation(coords.latitude, coords.longitude);
+                        }
                     }
                 }
             }

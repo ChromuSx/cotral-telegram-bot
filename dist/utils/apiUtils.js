@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetch = exports.logError = exports.formatFetchedData = exports.handleApiResponse = void 0;
 const axiosService_1 = __importDefault(require("../services/axiosService"));
+const functions_1 = require("./functions");
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
 async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) {
     if (!apiUrl) {
@@ -14,7 +15,6 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
     try {
         const data = await fetch(apiUrl);
         if (Array.isArray(data)) {
-            console.log(data);
             if (data.length === 0) {
                 await ctx.reply(NO_DATA_MESSAGE);
                 return;
@@ -47,7 +47,10 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
                         await ctx.reply(message);
                     }
                     if (item.coordX && item.coordY) {
-                        await ctx.sendLocation(item.coordX, item.coordY);
+                        const coords = (0, functions_1.convertAndValidateCoords)(item.coordX, item.coordY);
+                        if (coords) {
+                            await ctx.sendLocation(coords.latitude, coords.longitude);
+                        }
                     }
                 }
             }

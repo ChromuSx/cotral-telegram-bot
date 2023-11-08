@@ -7,7 +7,19 @@ export async function getTransitsByPoleCode(ctx: Context, poleCode: string): Pro
     const apiUrl = `/transits/${poleCode}`;
     await handleApiResponse(ctx, apiUrl, (response: any) => {
         const transits = response.transits;
-        return transits.map(formatTransitMessage).join('\n\n');
+        return transits.map((transit: Transit) =>
+        {
+            const inlineKeyboard: any = [];
+            if (transit.automezzo?.codice) {
+                inlineKeyboard.push([{ text: "Veicolo", callback_data: `vehicles:getVehicleRealTimePositions:${transit.automezzo.codice}` }]);
+            }
+            ctx.reply(formatTransitMessage(transit), {
+                reply_markup: {
+                    inline_keyboard: inlineKeyboard
+                }
+            });
+        }
+        );
     });
 }
 

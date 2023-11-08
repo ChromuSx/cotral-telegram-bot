@@ -1,6 +1,7 @@
 import { NarrowedContext } from 'telegraf';
 import * as polesApiHandler from '../../apiHandlers/polesApiHandler';
 import * as transitsApiHandler from '../../apiHandlers/transitsApiHandler';
+import * as vehiclesApiHandler from '../../apiHandlers/vehiclesApiHandler';
 import { PolesCommands } from '../../commands/polesCommands';
 import { ExtendedContext } from '../../interfaces/ExtendedContext';
 import { CallbackQuery, Update } from 'telegraf/typings/core/types/typegram';
@@ -31,6 +32,10 @@ export async function handleCallbackQuery(ctx:  NarrowedContext<ExtendedContext,
                 }
             } else {
                 await ctx.reply('UserID non trovato');
+            }
+        } else if (contextAction === 'vehicles' && firstArgument) {
+            if (action === 'getVehicleRealTimePositions') {
+                await vehiclesApiHandler.getVehicleRealTimePositions(ctx, firstArgument);
             }
         }
     }

@@ -51,6 +51,7 @@ exports.commandActions = {
     [`/${transitsCommands_1.TransitsCommands.GetTransitsByPoleCode}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice della palina:', transitsCommands_1.TransitsCommands.GetTransitsByPoleCode),
     [`/${vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions}`]: ctx => (0, telegrafUtils_1.promptForInput)(ctx, 'Inserisci il codice del veicolo:', vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions),
     [`/${polesCommands_1.PolesCommands.GetFavoritePoles}`]: async (ctx, userId) => {
+        console.log('userId', userId);
         if (userId) {
             await polesApiHandler.getFavoritePoles(ctx, userId);
         }

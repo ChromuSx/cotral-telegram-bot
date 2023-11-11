@@ -30,6 +30,7 @@ async function getAllPolesDestinationsByArrivalLocality(ctx, arrivalLocality) {
 }
 exports.getAllPolesDestinationsByArrivalLocality = getAllPolesDestinationsByArrivalLocality;
 async function getFavoritePoles(ctx, userId) {
+    console.log("DD");
     const apiUrl = `/poles/favorites/${userId}`;
     await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatPoleMessage);
 }

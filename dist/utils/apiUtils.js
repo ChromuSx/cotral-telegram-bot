@@ -16,6 +16,7 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
     try {
         const data = await fetch(apiUrl);
         if (Array.isArray(data)) {
+            console.log(data);
             if (data.length === 0) {
                 await ctx.reply(NO_DATA_MESSAGE);
                 return;

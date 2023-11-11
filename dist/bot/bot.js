@@ -65,6 +65,7 @@ bot.on('location', async (ctx) => {
     await (0, locationHandler_1.handleLocation)(ctx);
 });
 bot.on('callback_query', async (ctx) => {
+    console.log('callback_query', ctx.callbackQuery);
     await (0, callbackQueryHandler_1.handleCallbackQuery)(ctx);
 });
 exports.default = bot;

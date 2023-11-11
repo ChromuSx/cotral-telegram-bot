@@ -2,6 +2,7 @@ import { Markup, Telegraf } from "telegraf";
 import { ExtendedContext } from "../../interfaces/ExtendedContext";
 import { PolesCommands } from "../../commands/polesCommands";
 import { promptForInput } from "../../utils/telegrafUtils";
+import { handleCommand } from "../handlers/commandHandler";
 
 export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
 
@@ -27,6 +28,7 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
 
     bot.action(`poles:${PolesCommands.GetFavoritePoles}`, async (ctx: ExtendedContext) => {
         ctx.session.command = PolesCommands.GetFavoritePoles;
+        await handleCommand(ctx, `/${PolesCommands.GetFavoritePoles}`);
     });
 
     bot.action(`poles:${PolesCommands.GetPolesByCode}`, async (ctx: ExtendedContext) => {
@@ -41,9 +43,12 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
             ],
             [
                 Markup.button.callback('Inserisco manualmente📎', 'enter_position_manually')
+            ],
+            [
+                Markup.button.callback('Indietro↩️', 'POLES_MENU')
             ]
         ]);
-        await ctx.reply('Vuoi usare la tua posizione attuale o inserire una posizione manualmente?', keyboard);
+        await ctx.editMessageText('Vuoi usare la tua posizione attuale o inserire una posizione manualmente?', keyboard);
     });
 
     bot.action('use_current_position', async (ctx: ExtendedContext) => {

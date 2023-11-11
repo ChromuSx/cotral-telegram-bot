@@ -4,8 +4,7 @@
       "id": "704395182:704395182",
       "data": {
         "params": {},
-        "command": "getpolesbyposition",
-        "step": "arrival"
+        "command": "getfavoritepoles"
       }
     }
   ]

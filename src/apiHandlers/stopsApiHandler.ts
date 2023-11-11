@@ -15,7 +15,6 @@ export async function getFirstStopByLocality(ctx: ExtendedContext, locality: str
 
 function formatStopMessage(stop: Stop): string {
     return [
-        `Fermata:`,
         `Codice Fermata: ${stop.codiceStop ?? 'Non disponibile'}`,
         `Nome Fermata: ${stop.nomeStop ?? 'Non disponibile'}`,
         `Località: ${stop.localita ?? 'Non disponibile'}`,

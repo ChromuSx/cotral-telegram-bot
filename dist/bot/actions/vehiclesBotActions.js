@@ -6,7 +6,12 @@ const vehiclesCommands_1 = require("../../commands/vehiclesCommands");
 const telegrafUtils_1 = require("../../utils/telegrafUtils");
 function registerVehiclesBotActions(bot) {
     const vehiclesMenu = telegraf_1.Markup.inlineKeyboard([
-        telegraf_1.Markup.button.callback('Posizione veicolo per codice veicolo', vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions)
+        [
+            telegraf_1.Markup.button.callback('Posizione veicolo per codice veicolo🔢', vehiclesCommands_1.VehiclesCommands.GetVehicleRealTimePositions)
+        ],
+        [
+            telegraf_1.Markup.button.callback('Indietro↩️', 'MAIN_MENU')
+        ]
     ]);
     bot.action('VEHICLES_MENU', async (ctx) => {
         await ctx.editMessageText('Seleziona un\'opzione:', vehiclesMenu);

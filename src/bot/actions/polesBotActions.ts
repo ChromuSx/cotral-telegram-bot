@@ -7,13 +7,16 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
 
     const polesMenu = Markup.inlineKeyboard([
         [
-            Markup.button.callback('Preferiti', `poles:${PolesCommands.GetFavoritePoles}`),
-            Markup.button.callback('Codice', `poles:${PolesCommands.GetPolesByCode}`),
-            Markup.button.callback('Posizione', `poles:${PolesCommands.GetPolesByPosition}`)
+            Markup.button.callback('Preferiti⭐️', `poles:${PolesCommands.GetFavoritePoles}`),
+            Markup.button.callback('Codice🔢', `poles:${PolesCommands.GetPolesByCode}`),
+            Markup.button.callback('Posizione📍', `poles:${PolesCommands.GetPolesByPosition}`)
         ],
         [
-            Markup.button.callback('Arrivo e destinazione', `poles:${PolesCommands.GetPoleByArrivalAndDestination}`),
-            Markup.button.callback('Località di arrivo', `poles:${PolesCommands.GetAllPolesDestinationsByArrival}`)
+            Markup.button.callback('Arrivo e destinazione🚶🏁', `poles:${PolesCommands.GetPoleByArrivalAndDestination}`),
+            Markup.button.callback('Località di arrivo🚶', `poles:${PolesCommands.GetAllPolesDestinationsByArrival}`)
+        ],
+        [
+            Markup.button.callback('Indietro↩️', 'MAIN_MENU')
         ]
     ]);
     
@@ -33,15 +36,19 @@ export function registerPolesBotActions(bot: Telegraf<ExtendedContext>) {
     bot.action(`poles:${PolesCommands.GetPolesByPosition}`, async (ctx: ExtendedContext) => {
         ctx.session.command = PolesCommands.GetPolesByPosition;
         const keyboard = Markup.inlineKeyboard([
-            Markup.button.callback('Usa la mia posizione attuale', 'use_current_position'),
-            Markup.button.callback('Inserisco manualmente', 'enter_position_manually')
+            [
+                Markup.button.callback('Usa la mia posizione attuale🛰️', 'use_current_position')
+            ],
+            [
+                Markup.button.callback('Inserisco manualmente📎', 'enter_position_manually')
+            ]
         ]);
         await ctx.reply('Vuoi usare la tua posizione attuale o inserire una posizione manualmente?', keyboard);
     });
 
     bot.action('use_current_position', async (ctx: ExtendedContext) => {
         await ctx.reply('Condividi la tua posizione:', Markup.keyboard([
-            Markup.button.locationRequest('Condividi Posizione')
+            Markup.button.locationRequest('Condividi Posizione📍')
         ]).resize());
     });
 

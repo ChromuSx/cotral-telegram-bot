@@ -7,6 +7,7 @@ exports.fetch = exports.logError = exports.formatFetchedData = exports.handleApi
 const axiosService_1 = __importDefault(require("../services/axiosService"));
 const functions_1 = require("./functions");
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
+const DATA_ERROR_MESSAGE = 'Si è verificato un errore durante il recupero dei dati.❌';
 async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) {
     if (!apiUrl) {
         ctx.reply('Per favore, fornisci parametri validi.');
@@ -28,12 +29,12 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
                     const message = formatter(item);
                     const inlineKeyboard = [];
                     if (item.codicePalina) {
-                        inlineKeyboard.push([{ text: "Transiti", callback_data: `transits:getTransits:${item.codicePalina}` }]);
+                        inlineKeyboard.push([{ text: "Transiti🚦", callback_data: `transits:getTransits:${item.codicePalina}` }]);
                         if (item.preferita) {
-                            inlineKeyboard.push([{ text: "Rimuovi dai preferiti", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
+                            inlineKeyboard.push([{ text: "Rimuovi dai preferiti🗑️", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
                         }
                         else {
-                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
+                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti⭐️", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
                         }
                     }
                     if (inlineKeyboard.length > 0) {
@@ -65,7 +66,7 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
     }
     catch (error) {
         logError(error);
-        ctx.reply('Si è verificato un errore durante il recupero dei dati');
+        ctx.reply(DATA_ERROR_MESSAGE);
     }
 }
 exports.handleApiResponse = handleApiResponse;
@@ -84,7 +85,7 @@ function formatFetchedData(data, formatData) {
 exports.formatFetchedData = formatFetchedData;
 function logError(error) {
     const typedError = error;
-    console.error('Errore:', typedError.message || 'Errore sconosciuto');
+    console.error('Errore:', typedError.message || 'Errore sconosciuto.❌');
 }
 exports.logError = logError;
 async function fetch(apiUrl) {
@@ -94,7 +95,7 @@ async function fetch(apiUrl) {
     }
     catch (error) {
         logError(error);
-        throw new Error('Si è verificato un errore durante il recupero dei dati');
+        throw new Error(DATA_ERROR_MESSAGE);
     }
 }
 exports.fetch = fetch;

@@ -5,7 +5,12 @@ import { promptForInput } from "../../utils/telegrafUtils";
 
 export function registerTransitsBotActions(bot: Telegraf<ExtendedContext>) {
     const transitsMenu = Markup.inlineKeyboard([
-        Markup.button.callback('Transito per codice palina', TransitsCommands.GetTransitsByPoleCode)
+        [
+            Markup.button.callback('Transito per codice palina🔢', TransitsCommands.GetTransitsByPoleCode)
+        ],
+        [
+            Markup.button.callback('Indietro↩️', 'MAIN_MENU')
+        ]
     ]);
     
     bot.action('TRANSITS_MENU', async (ctx: ExtendedContext) => {

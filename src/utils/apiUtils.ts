@@ -3,6 +3,8 @@ import api from "../services/axiosService";
 import { convertAndValidateCoords } from "./functions";
 
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
+const DATA_ERROR_MESSAGE = 'Si è verificato un errore durante il recupero dei dati.❌';
+
 export async function handleApiResponse<T>(
     ctx: Context, 
     apiUrl: string | null, 
@@ -30,11 +32,11 @@ export async function handleApiResponse<T>(
 
                     const inlineKeyboard = [];
                     if (item.codicePalina) {
-                        inlineKeyboard.push([{ text: "Transiti", callback_data: `transits:getTransits:${item.codicePalina}` }]);
+                        inlineKeyboard.push([{ text: "Transiti🚦", callback_data: `transits:getTransits:${item.codicePalina}` }]);
                         if (item.preferita) {
-                            inlineKeyboard.push([{ text: "Rimuovi dai preferiti", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
+                            inlineKeyboard.push([{ text: "Rimuovi dai preferiti🗑️", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
                         } else {
-                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
+                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti⭐️", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
                         }
                     } 
                     
@@ -66,7 +68,7 @@ export async function handleApiResponse<T>(
         }
     } catch (error) {
         logError(error);
-        ctx.reply('Si è verificato un errore durante il recupero dei dati');
+        ctx.reply(DATA_ERROR_MESSAGE);
     }
 }
 
@@ -85,7 +87,7 @@ export function formatFetchedData<T>(data: void, formatData: (data: T) => string
 
 export function logError(error: unknown): void {
     const typedError = error as { message?: string };
-    console.error('Errore:', typedError.message || 'Errore sconosciuto');
+    console.error('Errore:', typedError.message || 'Errore sconosciuto.❌');
 }
 
 export async function fetch<T>(apiUrl: string): Promise<any> {
@@ -94,6 +96,6 @@ export async function fetch<T>(apiUrl: string): Promise<any> {
         return response.data;
     } catch (error) {
         logError(error);
-        throw new Error('Si è verificato un errore durante il recupero dei dati');
+        throw new Error(DATA_ERROR_MESSAGE);
     }
 }

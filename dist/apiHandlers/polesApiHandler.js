@@ -39,11 +39,11 @@ async function addFavoritePole(ctx, poleCode, stopCode, userId) {
     const requestBody = { userId, poleCode, stopCode };
     try {
         await axiosService_1.default.post(apiUrl, requestBody);
-        await ctx.reply('Palo aggiunto ai preferiti con successo!');
+        await ctx.reply('Palo aggiunto ai preferiti con successo!✅');
     }
     catch (error) {
         (0, apiUtils_1.logError)(error);
-        await ctx.reply('Si è verificato un errore durante l\'aggiunta del palo ai preferiti.');
+        await ctx.reply('Si è verificato un errore durante l\'aggiunta del palo ai preferiti.❌');
     }
 }
 exports.addFavoritePole = addFavoritePole;
@@ -52,31 +52,30 @@ async function removeFavoritePole(ctx, poleCode, userId) {
     const requestBody = { userId, poleCode };
     try {
         await axiosService_1.default.delete(apiUrl, { data: requestBody });
-        await ctx.reply('Palo rimosso dai preferiti con successo!');
+        await ctx.reply('Palo rimosso dai preferiti con successo!✅');
     }
     catch (error) {
         (0, apiUtils_1.logError)(error);
-        await ctx.reply('Si è verificato un errore durante la rimozione del palo dai preferiti.');
+        await ctx.reply('Si è verificato un errore durante la rimozione del palo dai preferiti.❌');
     }
 }
 exports.removeFavoritePole = removeFavoritePole;
 function formatPoleMessage(pole) {
     return [
-        `Palina:`,
         `Codice Palina: ${pole.codicePalina ?? 'Non disponibile'}`,
         `Codice Stop: ${pole.codiceStop ?? 'Non disponibile'}`,
         `Nome Palina: ${pole.nomePalina ?? 'Non disponibile'}`,
         `Nome Stop: ${pole.nomeStop ?? 'Non disponibile'}`,
         `Località: ${pole.localita ?? 'Non disponibile'}`,
         `Comune: ${pole.comune ?? 'Non disponibile'}`,
-        `Coord X: ${pole.coordX ?? 'Non disponibile'}`,
-        `Coord Y: ${pole.coordY ?? 'Non disponibile'}`,
-        `Zona tariffaria: ${pole.zonaTariffaria ? 'Sì' : 'No'}`,
-        `Distanza: ${pole.distanza ?? 'Non disponibile'}`,
+        //`Coord X: ${pole.coordX ?? 'Non disponibile'}`,
+        //`Coord Y: ${pole.coordY ?? 'Non disponibile'}`,
+        //`Zona tariffaria: ${pole.zonaTariffaria ? 'Sì' : 'No'}`,
+        //`Distanza: ${pole.distanza ?? 'Non disponibile'}`,
         `Destinazioni: ${pole.destinazioni ? pole.destinazioni.join(', ') : 'Non disponibile'}`,
-        `Cotral: ${pole.isCotral ? 'Sì' : 'No'}`,
-        `Capolinea: ${pole.isCapolinea ? 'Sì' : 'No'}`,
-        `Banchinato: ${pole.isBanchinato ? 'Sì' : 'No'}`
+        //`Cotral: ${pole.isCotral ? 'Sì' : 'No'}`,
+        //`Capolinea: ${pole.isCapolinea ? 'Sì' : 'No'}`,
+        //`Banchinato: ${pole.isBanchinato ? 'Sì' : 'No'}`
     ].join('\n');
 }
 function formatStringArray(data) {

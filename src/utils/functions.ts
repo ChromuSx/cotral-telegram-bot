@@ -6,3 +6,13 @@ export function convertAndValidateCoords(coordX: string, coordY: string): { lati
     }
     return null;
 }
+
+export function formatBoolean(value: boolean | null | undefined): string {
+    if (value === true) {
+        return 'Sì';
+    } else if (value === false) {
+        return 'No';
+    } else {
+        return 'Non disponibile';
+    }
+}

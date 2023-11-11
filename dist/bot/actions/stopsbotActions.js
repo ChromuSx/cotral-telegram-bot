@@ -6,8 +6,15 @@ const stopsCommands_1 = require("../../commands/stopsCommands");
 const telegrafUtils_1 = require("../../utils/telegrafUtils");
 function registerStopsBotActions(bot) {
     const stopsMenu = telegraf_1.Markup.inlineKeyboard([
-        telegraf_1.Markup.button.callback('Fermate per località', stopsCommands_1.StopsCommands.GetStopsByLocality),
-        telegraf_1.Markup.button.callback('Prima fermata per località', stopsCommands_1.StopsCommands.GetFirstStopByLocality)
+        [
+            telegraf_1.Markup.button.callback('Fermate per località🌐', stopsCommands_1.StopsCommands.GetStopsByLocality)
+        ],
+        [
+            telegraf_1.Markup.button.callback('Prima fermata per località☝️🌐', stopsCommands_1.StopsCommands.GetFirstStopByLocality)
+        ],
+        [
+            telegraf_1.Markup.button.callback('Indietro↩️', 'MAIN_MENU')
+        ]
     ]);
     bot.action('STOPS_MENU', async (ctx) => {
         await ctx.editMessageText('Seleziona un\'opzione:', stopsMenu);

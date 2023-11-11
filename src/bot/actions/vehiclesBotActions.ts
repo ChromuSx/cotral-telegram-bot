@@ -5,7 +5,12 @@ import { promptForInput } from "../../utils/telegrafUtils";
 
 export function registerVehiclesBotActions(bot: Telegraf<ExtendedContext>) {
     const vehiclesMenu = Markup.inlineKeyboard([
-        Markup.button.callback('Posizione veicolo per codice veicolo', VehiclesCommands.GetVehicleRealTimePositions)
+        [
+            Markup.button.callback('Posizione veicolo per codice veicolo🔢', VehiclesCommands.GetVehicleRealTimePositions)
+        ],
+        [
+            Markup.button.callback('Indietro↩️', 'MAIN_MENU')
+        ]
     ]);
     
     bot.action('VEHICLES_MENU', async (ctx: ExtendedContext) => {

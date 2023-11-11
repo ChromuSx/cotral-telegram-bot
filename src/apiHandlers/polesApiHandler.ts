@@ -38,10 +38,10 @@ export async function addFavoritePole(ctx: Context, poleCode: string, stopCode: 
 
     try {
         await api.post(apiUrl, requestBody);
-        await ctx.reply('Palo aggiunto ai preferiti con successo!');
+        await ctx.reply('Palo aggiunto ai preferiti con successo!✅');
     } catch (error) {
         logError(error);
-        await ctx.reply('Si è verificato un errore durante l\'aggiunta del palo ai preferiti.');
+        await ctx.reply('Si è verificato un errore durante l\'aggiunta del palo ai preferiti.❌');
     }
 }
 
@@ -51,30 +51,29 @@ export async function removeFavoritePole(ctx: Context, poleCode: string, userId:
 
     try {
         await api.delete(apiUrl, { data: requestBody });
-        await ctx.reply('Palo rimosso dai preferiti con successo!');
+        await ctx.reply('Palo rimosso dai preferiti con successo!✅');
     } catch (error) {
         logError(error);
-        await ctx.reply('Si è verificato un errore durante la rimozione del palo dai preferiti.');
+        await ctx.reply('Si è verificato un errore durante la rimozione del palo dai preferiti.❌');
     }
 }
 
 function formatPoleMessage(pole: Pole): string {
     return [
-        `Palina:`,
         `Codice Palina: ${pole.codicePalina ?? 'Non disponibile'}`,
         `Codice Stop: ${pole.codiceStop ?? 'Non disponibile'}`,
         `Nome Palina: ${pole.nomePalina ?? 'Non disponibile'}`,
         `Nome Stop: ${pole.nomeStop ?? 'Non disponibile'}`,
         `Località: ${pole.localita ?? 'Non disponibile'}`,
         `Comune: ${pole.comune ?? 'Non disponibile'}`,
-        `Coord X: ${pole.coordX ?? 'Non disponibile'}`,
-        `Coord Y: ${pole.coordY ?? 'Non disponibile'}`,
-        `Zona tariffaria: ${pole.zonaTariffaria ? 'Sì' : 'No'}`,
-        `Distanza: ${pole.distanza ?? 'Non disponibile'}`,
+        //`Coord X: ${pole.coordX ?? 'Non disponibile'}`,
+        //`Coord Y: ${pole.coordY ?? 'Non disponibile'}`,
+        //`Zona tariffaria: ${pole.zonaTariffaria ? 'Sì' : 'No'}`,
+        //`Distanza: ${pole.distanza ?? 'Non disponibile'}`,
         `Destinazioni: ${pole.destinazioni ? pole.destinazioni.join(', ') : 'Non disponibile'}`,
-        `Cotral: ${pole.isCotral ? 'Sì' : 'No'}`,
-        `Capolinea: ${pole.isCapolinea ? 'Sì' : 'No'}`,
-        `Banchinato: ${pole.isBanchinato ? 'Sì' : 'No'}`
+        //`Cotral: ${pole.isCotral ? 'Sì' : 'No'}`,
+        //`Capolinea: ${pole.isCapolinea ? 'Sì' : 'No'}`,
+        //`Banchinato: ${pole.isBanchinato ? 'Sì' : 'No'}`
     ].join('\n');
 }
 

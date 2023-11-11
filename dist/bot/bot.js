@@ -44,13 +44,17 @@ async function registerCommands() {
 }
 registerCommands();
 const mainMenu = telegraf_1.Markup.inlineKeyboard([
-    telegraf_1.Markup.button.callback('Paline', 'POLES_MENU'),
-    telegraf_1.Markup.button.callback('Fermate', 'STOPS_MENU'),
-    telegraf_1.Markup.button.callback('Transiti', 'TRANSITS_MENU'),
-    telegraf_1.Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
+    telegraf_1.Markup.button.callback('Paline🪧', 'POLES_MENU'),
+    telegraf_1.Markup.button.callback('Fermate🚏', 'STOPS_MENU'),
+    telegraf_1.Markup.button.callback('Transiti🚦', 'TRANSITS_MENU'),
+    telegraf_1.Markup.button.callback('Veicoli🚎', 'VEHICLES_MENU'),
 ]);
+const welcomeMessage = 'Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀';
 bot.start((ctx) => {
-    ctx.reply('Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀', mainMenu);
+    ctx.reply(welcomeMessage, mainMenu);
+});
+bot.action('MAIN_MENU', (ctx) => {
+    ctx.editMessageText(welcomeMessage, mainMenu);
 });
 bot.on('text', async (ctx) => {
     const myCtx = ctx;

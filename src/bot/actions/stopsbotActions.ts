@@ -6,8 +6,15 @@ import { promptForInput } from "../../utils/telegrafUtils";
 export function registerStopsBotActions(bot: Telegraf<ExtendedContext>) {
 
     const stopsMenu = Markup.inlineKeyboard([
-        Markup.button.callback('Fermate per località', StopsCommands.GetStopsByLocality),
-        Markup.button.callback('Prima fermata per località', StopsCommands.GetFirstStopByLocality)
+        [
+            Markup.button.callback('Fermate per località🌐', StopsCommands.GetStopsByLocality)
+        ],
+        [
+            Markup.button.callback('Prima fermata per località☝️🌐', StopsCommands.GetFirstStopByLocality)
+        ],
+        [
+            Markup.button.callback('Indietro↩️', 'MAIN_MENU')
+        ]
     ]);
     
     bot.action('STOPS_MENU', async (ctx: ExtendedContext) => {

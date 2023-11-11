@@ -49,15 +49,22 @@ registerCommands();
 
 
 const mainMenu = Markup.inlineKeyboard([
-    Markup.button.callback('Paline', 'POLES_MENU'),
-    Markup.button.callback('Fermate', 'STOPS_MENU'),
-    Markup.button.callback('Transiti', 'TRANSITS_MENU'),
-    Markup.button.callback('Veicoli', 'VEHICLES_MENU'),
+    Markup.button.callback('Paline🪧', 'POLES_MENU'),
+    Markup.button.callback('Fermate🚏', 'STOPS_MENU'),
+    Markup.button.callback('Transiti🚦', 'TRANSITS_MENU'),
+    Markup.button.callback('Veicoli🚎', 'VEHICLES_MENU'),
 ]);
 
+const welcomeMessage = 'Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀';
+
 bot.start((ctx) => {
-    ctx.reply('Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀', mainMenu);
+    ctx.reply(welcomeMessage, mainMenu);
 });
+
+bot.action('MAIN_MENU', (ctx) => {
+    ctx.editMessageText(welcomeMessage, mainMenu);
+});
+
 
 bot.on('text', async (ctx) => {
     const myCtx = ctx as ExtendedContext;

@@ -17,7 +17,7 @@ export async function handleApiResponse<T>(
     }
 
     try {
-        const data = await fetch<T>(apiUrl);
+        const data = await fetchData<T>(apiUrl);
         if (Array.isArray(data)) {
             if (data.length === 0) {
                 await ctx.reply(NO_DATA_MESSAGE);
@@ -36,7 +36,7 @@ export async function handleApiResponse<T>(
                         if (item.preferita) {
                             inlineKeyboard.push([{ text: "Rimuovi dai preferiti🗑️", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
                         } else {
-                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti⭐️", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
+                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti🌟", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
                         }
                     } 
                     
@@ -90,7 +90,7 @@ export function logError(error: unknown): void {
     console.error('Errore:', typedError.message || 'Errore sconosciuto.❌');
 }
 
-export async function fetch<T>(apiUrl: string): Promise<any> {
+export async function fetchData<T>(apiUrl: string): Promise<any> {
     try {
         const response = await api.get<void>(apiUrl);
         return response.data;

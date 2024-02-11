@@ -9,8 +9,8 @@ export async function getVehicleRealTimePositions(ctx: Context, vehicleCode: str
 
 function formatVehicleRealTimePositions(vehicleData: VehiclePosition): string {
     return [
-        `Coordinate X: ${vehicleData.coordX ?? 'Non disponibile'}`,
-        `Coordinate Y: ${vehicleData.coordY ?? 'Non disponibile'}`,
+        //`Coordinate X: ${vehicleData.coordX ?? 'Non disponibile'}`,
+        //`Coordinate Y: ${vehicleData.coordY ?? 'Non disponibile'}`,
         `Ora: ${vehicleData.time ?? 'Non disponibile'}`
     ].join('\n');
 }

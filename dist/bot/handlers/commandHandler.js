@@ -6,7 +6,6 @@ const sessionActions_1 = require("../actions/sessionActions");
 const errorHandler_1 = require("./errorHandler");
 async function handleCommand(ctx, text) {
     try {
-        console.log('userId2');
         const userId = ctx.from?.id;
         const commandAction = commandActions_1.commandActions[text];
         const sessionAction = ctx.session.command ? sessionActions_1.sessionActions[ctx.session.command] : undefined;

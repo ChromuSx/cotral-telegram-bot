@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetch = exports.logError = exports.formatFetchedData = exports.handleApiResponse = void 0;
+exports.fetchData = exports.logError = exports.formatFetchedData = exports.handleApiResponse = void 0;
 const axiosService_1 = __importDefault(require("../services/axiosService"));
 const functions_1 = require("./functions");
 const NO_DATA_MESSAGE = 'Nessun dato disponibile.';
@@ -14,9 +14,8 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
         return;
     }
     try {
-        const data = await fetch(apiUrl);
+        const data = await fetchData(apiUrl);
         if (Array.isArray(data)) {
-            console.log(data);
             if (data.length === 0) {
                 await ctx.reply(NO_DATA_MESSAGE);
                 return;
@@ -35,7 +34,7 @@ async function handleApiResponse(ctx, apiUrl, formatter, isStringArray = false) 
                             inlineKeyboard.push([{ text: "Rimuovi dai preferiti🗑️", callback_data: `poles:remove_favorite:${item.codicePalina}` }]);
                         }
                         else {
-                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti⭐️", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
+                            inlineKeyboard.push([{ text: "Aggiungi ai preferiti🌟", callback_data: `poles:add_favorite:${item.codicePalina}:${item.codiceStop}` }]);
                         }
                     }
                     if (inlineKeyboard.length > 0) {
@@ -89,7 +88,7 @@ function logError(error) {
     console.error('Errore:', typedError.message || 'Errore sconosciuto.❌');
 }
 exports.logError = logError;
-async function fetch(apiUrl) {
+async function fetchData(apiUrl) {
     try {
         const response = await axiosService_1.default.get(apiUrl);
         return response.data;
@@ -99,4 +98,4 @@ async function fetch(apiUrl) {
         throw new Error(DATA_ERROR_MESSAGE);
     }
 }
-exports.fetch = fetch;
+exports.fetchData = fetchData;

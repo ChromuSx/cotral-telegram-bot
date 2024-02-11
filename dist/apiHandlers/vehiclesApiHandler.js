@@ -9,8 +9,8 @@ async function getVehicleRealTimePositions(ctx, vehicleCode) {
 exports.getVehicleRealTimePositions = getVehicleRealTimePositions;
 function formatVehicleRealTimePositions(vehicleData) {
     return [
-        `Coordinate X: ${vehicleData.coordX ?? 'Non disponibile'}`,
-        `Coordinate Y: ${vehicleData.coordY ?? 'Non disponibile'}`,
+        //`Coordinate X: ${vehicleData.coordX ?? 'Non disponibile'}`,
+        //`Coordinate Y: ${vehicleData.coordY ?? 'Non disponibile'}`,
         `Ora: ${vehicleData.time ?? 'Non disponibile'}`
     ].join('\n');
 }

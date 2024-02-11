@@ -1,28 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerPolesBotActions = void 0;
+exports.registerPolesBotActions = exports.polesMenu = void 0;
 const telegraf_1 = require("telegraf");
 const polesCommands_1 = require("../../commands/polesCommands");
 const telegrafUtils_1 = require("../../utils/telegrafUtils");
 const commandHandler_1 = require("../handlers/commandHandler");
+exports.polesMenu = telegraf_1.Markup.keyboard([
+    [
+        telegraf_1.Markup.button.callback('Preferiti✨', `poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`),
+        telegraf_1.Markup.button.callback('Codice🔢', `poles:${polesCommands_1.PolesCommands.GetPolesByCode}`),
+        telegraf_1.Markup.button.callback('Posizione📍', `poles:${polesCommands_1.PolesCommands.GetPolesByPosition}`)
+    ],
+    [
+        telegraf_1.Markup.button.callback('Arrivo e destinazione🚶🏁', `poles:${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`),
+        telegraf_1.Markup.button.callback('Località di arrivo🚶', `poles:${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`)
+    ],
+    [
+        telegraf_1.Markup.button.callback('Menù principale↩️', 'MAIN_MENU')
+    ]
+]);
 function registerPolesBotActions(bot) {
-    const polesMenu = telegraf_1.Markup.inlineKeyboard([
-        [
-            telegraf_1.Markup.button.callback('Preferiti⭐️', `poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`),
-            telegraf_1.Markup.button.callback('Codice🔢', `poles:${polesCommands_1.PolesCommands.GetPolesByCode}`),
-            telegraf_1.Markup.button.callback('Posizione📍', `poles:${polesCommands_1.PolesCommands.GetPolesByPosition}`)
-        ],
-        [
-            telegraf_1.Markup.button.callback('Arrivo e destinazione🚶🏁', `poles:${polesCommands_1.PolesCommands.GetPoleByArrivalAndDestination}`),
-            telegraf_1.Markup.button.callback('Località di arrivo🚶', `poles:${polesCommands_1.PolesCommands.GetAllPolesDestinationsByArrival}`)
-        ],
-        [
-            telegraf_1.Markup.button.callback('Indietro↩️', 'MAIN_MENU')
-        ]
-    ]);
-    bot.action('POLES_MENU', async (ctx) => {
-        await ctx.editMessageText('Seleziona un\'opzione:', polesMenu);
-    });
     bot.action(`poles:${polesCommands_1.PolesCommands.GetFavoritePoles}`, async (ctx) => {
         ctx.session.command = polesCommands_1.PolesCommands.GetFavoritePoles;
         await (0, commandHandler_1.handleCommand)(ctx, `/${polesCommands_1.PolesCommands.GetFavoritePoles}`);

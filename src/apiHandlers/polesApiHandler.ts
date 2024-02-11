@@ -1,7 +1,7 @@
-import { Context } from 'telegraf';
+import { Context, Markup } from 'telegraf';
 import { Pole } from '../interfaces/Pole';
 import { ExtendedContext } from '../interfaces/ExtendedContext';
-import { handleApiResponse, logError } from '../utils/apiUtils';
+import { fetchData, handleApiResponse, logError } from '../utils/apiUtils';
 import api from '../services/axiosService';
 
 export async function getPolesByCode(ctx: Context, code: string, params: { userId?: number | undefined }): Promise<void> {
@@ -27,10 +27,35 @@ export async function getAllPolesDestinationsByArrivalLocality(ctx: Context, arr
     await handleApiResponse(ctx, apiUrl, formatStringArray, true);
 }
 
-export async function getFavoritePoles(ctx: Context, userId: number): Promise<void> {
-    const apiUrl = `/poles/favorites/${userId}`;
-    await handleApiResponse(ctx, apiUrl, formatPoleMessage);
+export async function getFavoritePolesButtons(ctx: ExtendedContext) {
+    const userId = ctx.from?.id;
+    if (!userId) {
+        return [];
+    }
+    const favorite_poles = await getFavoritePoles(ctx, userId, true);
+    if (favorite_poles && favorite_poles.length > 0) {
+        return favorite_poles.flatMap(item => {
+            return item.codicePalina ? [Markup.button.callback(`⭐️${item.codicePalina} ${item.nomePalina}`, `transits:getTransits:${item.codicePalina}`)] : [];
+        });
+    } else {
+        return [];
+    }
 }
+
+export async function getFavoritePoles(ctx: Context, userId: number, fetchOnly: boolean = false): Promise<Pole[] | void> {
+    const apiUrl = `/poles/favorites/${userId}`;
+    if (fetchOnly) {
+        try {
+            return await fetchData(apiUrl);
+        } catch (error) {
+            logError(error);
+            return [];
+        }
+    } else {
+        await handleApiResponse(ctx, apiUrl, formatPoleMessage);
+    }
+}
+
 
 export async function addFavoritePole(ctx: Context, poleCode: string, stopCode: string, userId: number): Promise<void> {
     const apiUrl = '/poles/favorites';

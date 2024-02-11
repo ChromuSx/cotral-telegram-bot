@@ -40,7 +40,7 @@ function formatTransitMessage(transit) {
         //`Numero Ordine: ${transit.numeroOrdine ?? 'Non disponibile'}`,
         `Tempo Transito: ${formatDateTime(transit.tempoTransito)}`,
         `Ritardo: ${transit.ritardo ? 'Sì' : 'No'}`,
-        `Passato: ${transit.passato ? 'Sì' : 'No'}`,
+        //`Passato: ${transit.passato ? 'Sì' : 'No'}`,
         `Automezzo: Codice - ${transit.automezzo?.codice ?? 'Non disponibile'}, Attivo - ${(0, functions_1.formatBoolean)(transit.automezzo?.isAlive)}`,
         //`Testo Fermata: ${transit.testoFermata ?? 'Non disponibile'}`,
         //`Data Modifica: ${formatDateTime(transit.dataModifica)}`,

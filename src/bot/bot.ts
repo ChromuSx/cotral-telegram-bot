@@ -13,6 +13,7 @@ import { VehiclesCommands } from '../commands/vehiclesCommands';
 import { handleCommand } from './handlers/commandHandler';
 import { handleCallbackQuery } from './handlers/callbackQueryHandler';
 import { handleLocation } from './handlers/locationHandler';
+import { getFavoritePolesButtons } from '../apiHandlers/polesApiHandler';
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -47,23 +48,45 @@ async function registerCommands() {
 
 registerCommands();
 
-
-const mainMenu = Markup.inlineKeyboard([
-    Markup.button.callback('Paline🪧', 'POLES_MENU'),
-    Markup.button.callback('Fermate🚏', 'STOPS_MENU'),
-    Markup.button.callback('Transiti🚦', 'TRANSITS_MENU'),
-    Markup.button.callback('Veicoli🚎', 'VEHICLES_MENU'),
-]);
-
 const welcomeMessage = 'Benvenuto! 👋\nPer accedere ai servizi, seleziona una delle opzioni qui sotto 👇\n oppure usa le scorciatoie del menu per un accesso rapido. 🚀';
 
-bot.start((ctx) => {
-    ctx.reply(welcomeMessage, mainMenu);
+let mainMenuButtons = [
+    [
+        Markup.button.callback('Paline🪧', 'POLES_MENU'),
+        Markup.button.callback('Fermate🚏', 'STOPS_MENU')
+    ],
+    [
+        Markup.button.callback('Transiti🚦', 'TRANSITS_MENU'),
+        Markup.button.callback('Veicoli🚎', 'VEHICLES_MENU')
+    ]
+];
+
+let mainMenuButtonsWithFavoritePoles: any = [];
+
+bot.start(ctx => {
+    mainMenu(ctx);
 });
 
-bot.action('MAIN_MENU', (ctx) => {
-    ctx.editMessageText(welcomeMessage, mainMenu);
+
+bot.action('MAIN_MENU', ctx => {
+    mainMenu(ctx);
 });
+
+
+export async function mainMenu(ctx: ExtendedContext) {
+    const favoritePolesButtons = await getFavoritePolesButtons(ctx);
+
+    const favoritePolesInlineKeyboard = Markup.inlineKeyboard(
+        favoritePolesButtons.map(button => Markup.button.callback(button.text, button.callback_data)),
+        { columns: favoritePolesButtons.length > 1 ? 2 : 1 } // Opzionale: definisci il numero di colonne
+    );
+
+    await ctx.reply(welcomeMessage, Markup.keyboard(mainMenuButtons));
+
+    if (favoritePolesButtons.length > 0) {
+        await ctx.reply('Le tue paline preferite:', favoritePolesInlineKeyboard);
+    }
+}
 
 
 bot.on('text', async (ctx) => {

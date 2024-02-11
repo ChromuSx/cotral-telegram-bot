@@ -29,7 +29,6 @@ const transitsApiHandler = __importStar(require("../../apiHandlers/transitsApiHa
 const vehiclesApiHandler = __importStar(require("../../apiHandlers/vehiclesApiHandler"));
 const polesCommands_1 = require("../../commands/polesCommands");
 async function handleCallbackQuery(ctx) {
-    console.log('userId1');
     if ('data' in ctx.callbackQuery) {
         const callbackData = ctx.callbackQuery.data;
         const [contextAction, action, firstArgument, secondArgument] = callbackData.split(':');

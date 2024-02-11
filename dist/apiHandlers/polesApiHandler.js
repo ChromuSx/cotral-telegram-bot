@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeFavoritePole = exports.addFavoritePole = exports.getFavoritePoles = exports.getAllPolesDestinationsByArrivalLocality = exports.getPoleByArrivalAndDestinationLocality = exports.getPolesByPosition = exports.getPolesByCode = void 0;
+exports.removeFavoritePole = exports.addFavoritePole = exports.getFavoritePoles = exports.getFavoritePolesButtons = exports.getAllPolesDestinationsByArrivalLocality = exports.getPoleByArrivalAndDestinationLocality = exports.getPolesByPosition = exports.getPolesByCode = void 0;
+const telegraf_1 = require("telegraf");
 const apiUtils_1 = require("../utils/apiUtils");
 const axiosService_1 = __importDefault(require("../services/axiosService"));
 async function getPolesByCode(ctx, code, params) {
@@ -29,10 +30,36 @@ async function getAllPolesDestinationsByArrivalLocality(ctx, arrivalLocality) {
     await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatStringArray, true);
 }
 exports.getAllPolesDestinationsByArrivalLocality = getAllPolesDestinationsByArrivalLocality;
-async function getFavoritePoles(ctx, userId) {
-    console.log("DD");
+async function getFavoritePolesButtons(ctx) {
+    const userId = ctx.from?.id;
+    if (!userId) {
+        return [];
+    }
+    const favorite_poles = await getFavoritePoles(ctx, userId, true);
+    if (favorite_poles && favorite_poles.length > 0) {
+        return favorite_poles.flatMap(item => {
+            return item.codicePalina ? [telegraf_1.Markup.button.callback(`⭐️${item.codicePalina} ${item.nomePalina}`, `transits:getTransits:${item.codicePalina}`)] : [];
+        });
+    }
+    else {
+        return [];
+    }
+}
+exports.getFavoritePolesButtons = getFavoritePolesButtons;
+async function getFavoritePoles(ctx, userId, fetchOnly = false) {
     const apiUrl = `/poles/favorites/${userId}`;
-    await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatPoleMessage);
+    if (fetchOnly) {
+        try {
+            return await (0, apiUtils_1.fetchData)(apiUrl);
+        }
+        catch (error) {
+            (0, apiUtils_1.logError)(error);
+            return [];
+        }
+    }
+    else {
+        await (0, apiUtils_1.handleApiResponse)(ctx, apiUrl, formatPoleMessage);
+    }
 }
 exports.getFavoritePoles = getFavoritePoles;
 async function addFavoritePole(ctx, poleCode, stopCode, userId) {

@@ -3,20 +3,16 @@ import { ExtendedContext } from "../../interfaces/ExtendedContext";
 import { TransitsCommands } from "../../commands/transitsCommands";
 import { promptForInput } from "../../utils/telegrafUtils";
 
-export function registerTransitsBotActions(bot: Telegraf<ExtendedContext>) {
-    const transitsMenu = Markup.inlineKeyboard([
-        [
-            Markup.button.callback('Transito per codice palina🔢', TransitsCommands.GetTransitsByPoleCode)
-        ],
-        [
-            Markup.button.callback('Indietro↩️', 'MAIN_MENU')
-        ]
-    ]);
-    
-    bot.action('TRANSITS_MENU', async (ctx: ExtendedContext) => {
-        await ctx.editMessageText('Seleziona un\'opzione:', transitsMenu);
-    });
+export const transitsMenu = Markup.keyboard([
+    [
+        Markup.button.callback('Transito per codice palina🔢', TransitsCommands.GetTransitsByPoleCode)
+    ],
+    [
+        Markup.button.callback('Menù principale↩️', 'MAIN_MENU')
+    ]
+]);
 
+export function registerTransitsBotActions(bot: Telegraf<ExtendedContext>) {
     bot.action(TransitsCommands.GetTransitsByPoleCode, async (ctx: ExtendedContext) => {
         promptForInput(ctx, 'Inserisci il codice palina:', TransitsCommands.GetTransitsByPoleCode);
     });

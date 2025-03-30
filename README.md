@@ -110,12 +110,6 @@ Se desideri contribuire a questo progetto, ti invitiamo a:
 
 ## Licenza
 
-Questo progetto è rilasciato sotto licenza ISC.
-
-## Contatti
-
-Per domande o suggerimenti, non esitare a contattare il team di sviluppo.
-
----
+Questo progetto è rilasciato sotto licenza MIT.
 
 *Nota: Questo bot è stato sviluppato come interfaccia per il Cotral Server API, che a sua volta interagisce con i servizi ufficiali di Cotral. Non è un prodotto ufficiale di Cotral.*

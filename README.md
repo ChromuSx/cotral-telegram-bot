@@ -1,5 +1,3 @@
-Creerò un README dettagliato per il progetto cotral-telegram-bot, basandomi sui file che ho a disposizione. Analizzerò entrambi i progetti (bot e server) per comprendere meglio il contesto e le funzionalità.
-
 # Cotral Telegram Bot
 
 Cotral Telegram Bot è un'interfaccia Telegram che consente agli utenti di interagire facilmente con le API del sistema di trasporto Cotral. Questo bot fornisce un accesso immediato a informazioni su paline, fermate, transiti e veicoli del servizio Cotral direttamente dalla piattaforma Telegram.

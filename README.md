@@ -1,6 +1,10 @@
 # 🚌 Cotral Telegram Bot
 
 <div align="center">
+  <img src="logo.png" alt="CotralTelegramBot" width="200">
+</div>
+
+<div align="center">
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)

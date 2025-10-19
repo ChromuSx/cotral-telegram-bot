@@ -11,6 +11,11 @@
 ![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/ChromuSx)
+[![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/chromus)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/chromus)
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/giovanniguarino1999)
+
 **Un bot Telegram intelligente per accedere in tempo reale alle informazioni del trasporto pubblico Cotral**
 
 [Funzionalità](#-funzionalità) • [Installazione](#-installazione) • [Utilizzo](#-utilizzo) • [API](#-api-reference) • [Contribuire](#-contribuire)
@@ -344,34 +349,19 @@ Accettiamo contributi! Ecco come partecipare:
 - Aggiorna la documentazione
 - Usa commit semantici
 
-## 📅 Roadmap
+## 💖 Supporta il Progetto
 
-- [x] Implementazione base del bot
-- [x] Sistema di preferiti
-- [x] Geolocalizzazione
-- [ ] Notifiche push per ritardi
-- [ ] Supporto multilingua (EN, ES, FR)
-- [ ] Pianificazione viaggi
-- [ ] Integrazione pagamenti biglietti
-- [ ] Dashboard web amministrativa
-- [ ] Analytics utilizzo
+Questo progetto è completamente gratuito e open source. Se lo trovi utile e vuoi supportare il suo sviluppo continuo e gli aggiornamenti futuri, considera di fare una donazione. Il tuo supporto aiuta a mantenere vivo il progetto e mi motiva ad aggiungere nuove funzionalità e miglioramenti!
+
+<div align="center">
+  <a href="https://github.com/sponsors/ChromuSx"><img src="https://img.shields.io/badge/Sponsor-GitHub-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="GitHub Sponsors"></a>
+  <a href="https://ko-fi.com/chromus"><img src="https://img.shields.io/badge/Support-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
+  <a href="https://buymeacoffee.com/chromus"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
+  <a href="https://www.paypal.com/paypalme/giovanniguarino1999"><img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal"></a>
+</div>
+
+Ogni contributo, non importa quanto piccolo, è molto apprezzato! ❤️
 
 ## 📄 Licenza
 
 Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
-
-## 🙏 Riconoscimenti
-
-- [Telegraf](https://telegraf.js.org/) - Framework Telegram Bot
-- [Cotral Server API](https://github.com/ChromuSx/cotral-server-api) - API Backend
-- Team Cotral per i servizi di trasporto
-
----
-
-<div align="center">
-
-**Sviluppato con ❤️ per i pendolari del Lazio**
-
-[Segnala Bug](https://github.com/tuoutente/cotral-telegram-bot/issues) • [Richiedi Feature](https://github.com/tuoutente/cotral-telegram-bot/issues)
-
-</div>
